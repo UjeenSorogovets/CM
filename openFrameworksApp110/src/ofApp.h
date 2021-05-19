@@ -13,6 +13,8 @@ public:
 	void update();
 	void draw();
 
+	void addFilterClick(ofxDatGuiButtonEvent e);
+
 	void addMediaClick(ofxDatGuiButtonEvent e);
 
 	ofxDatGuiValuePlotter* plotter;

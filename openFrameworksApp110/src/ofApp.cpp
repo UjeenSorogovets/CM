@@ -74,20 +74,18 @@ public:
 
 	void push(Component component)
 	{
-		int size = components.size();
-		component.component->setLabel(to_string(size));
-
-		component.startPosX = startPosX;
-		component.startPosY = startPosY;
-
-		component.component->setHeight(componentHeight);
-		component.component->setWidth(componentWidth, 0);
-
-		component.height = componentHeight;
-		component.width = componentWidth;
-
 		if (component.videoPath != "")
 		{
+			int size = components.size();
+			component.startPosX = startPosX;
+			component.startPosY = startPosY;
+
+			component.component->setHeight(componentHeight);
+			component.component->setWidth(componentWidth, 0);
+
+			component.height = componentHeight;
+			component.width = componentWidth;
+
 			if (size == 0)
 			{
 				component.component->setPosition(startPosX, startPosY);
@@ -98,14 +96,14 @@ public:
 			{
 				if (horizontal)
 				{
-					component.startPosX = startPosX + component.width * (size) + offsetX * (size);
-					cout << "add"<< component.startPosX << endl;
+					component.startPosX = startPosX + component.width * (size)+offsetX * (size);
+					component.component->setLabel(to_string(size));
+					cout << "add" << component.startPosX << endl;
 				}
 				else
 				{
 					component.startPosY = startPosY * (size + 1) + offsetY * (size);
 				}
-
 				component.component->setPosition(component.startPosX, component.startPosY);
 			}
 
@@ -123,6 +121,7 @@ public:
 };
 
 ComponentPanel horizontalPanel;
+ComponentPanel verticalPanel;
 
 int catchMediaButton(int x, int y)
 {
@@ -155,34 +154,50 @@ int helpImageWidth;
 int helpImageHeight;
 
 int choosedButtonNumber = -1;
-void ofApp::mouseDragged(int x, int y, int button) {
-	
+int offsetDragX = 0;
+int offsetDragY = 0;
 
+void ofApp::mouseDragged(int x, int y, int button) {
 	if (choosedButtonNumber == -1)
 	{
 		choosedButtonNumber = catchMediaButton(x, y);
+		if (choosedButtonNumber != -1 && choosedButtonNumber <= horizontalPanel.components.size())
+		{
+			offsetDragX = horizontalPanel.components[choosedButtonNumber].startPosX - x;
+			offsetDragY = horizontalPanel.components[choosedButtonNumber].startPosY - y;
+		}
 	}
 	else if (choosedButtonNumber != -1 && choosedButtonNumber <= horizontalPanel.components.size())
 	{
 		isMousePressed = true;
+
 		helpImage = horizontalPanel.components[choosedButtonNumber].image;
 		helpImageX = horizontalPanel.components[choosedButtonNumber].startPosX;
 		helpImageY = horizontalPanel.components[choosedButtonNumber].startPosY;
 		helpImageWidth = horizontalPanel.components[choosedButtonNumber].width;
 		helpImageHeight = horizontalPanel.components[choosedButtonNumber].height;
-		//
-		horizontalPanel.components[choosedButtonNumber].currentPosX = x;
-		horizontalPanel.components[choosedButtonNumber].currentPosY = y;
+
+		horizontalPanel.components[choosedButtonNumber].currentPosX = x + offsetDragX;
+		horizontalPanel.components[choosedButtonNumber].currentPosY = y + offsetDragY;
 	}
+}
+
+Component createFilterButton(ofApp* ofApp)
+{
+	Component component;
+	auto testLabel = "tag " + to_string(verticalPanel.components.size());
+	component.component = new ofxDatGuiButton(testLabel);
+	//component.component->setOpacity(0.0f);
+	component.videoPath = testLabel;
+	//component.component->onButtonEvent(ofApp, &ofApp::onButtonEvent);
+
+	return component;
 }
 
 Component createMediaButton(ofApp* ofApp)
 {
 	Component component;
 	component.component = new ofxDatGuiButton("---");
-	//
-	
-	//
 	component.component->setOpacity(0.0f);
 	component.component->onButtonEvent(ofApp, &ofApp::onButtonEvent);
 
@@ -228,6 +243,14 @@ void ofApp::setup()
 	component->setOpacity(0.0f);
 	components.push_back(component);
 
+	component = new ofxDatGuiButton("+");
+	component->setPosition(x + 20, 800);
+	component->setWidth(100, 0.0f);
+	component->setHeight(100);
+	component->onButtonEvent(this, &ofApp::addFilterClick);
+	component->setOpacity(0.0f);
+	components.push_back(component);
+	//
 	horizontalPanel.startPosX = 250;
 	horizontalPanel.startPosY = 30;
 	horizontalPanel.offsetX = 20;
@@ -235,6 +258,18 @@ void ofApp::setup()
 
 	leftViewer = MediaViewer(250, 180, 800, 800);
 	rightViewer = MediaViewer(1050, 180, 800, 800);
+
+	verticalPanel.startPosX = 60;
+	verticalPanel.startPosY = 150;
+	verticalPanel.offsetX = 0;
+	verticalPanel.offsetY = 20;
+	verticalPanel.horizontal = false;
+
+	for (int i = 0; i < 4; i++)
+	{
+		auto x = createFilterButton(this);
+		verticalPanel.push(x);
+	}
 	//rightViewer.imagePlayer.load("C:/Users/GAD/Desktop/image_2021-05-12_10-24-07.png");
 
 }
@@ -258,6 +293,7 @@ void ofApp::update()
 	for (int i = 0; i < components.size(); i++) components[i]->update();
 
 	updateAll(horizontalPanel);
+	updateAll(verticalPanel);
 
 	leftViewer.imagePlayer.update();
 	leftViewer.videoPlayer.update();
@@ -286,9 +322,10 @@ void drawAll(ComponentPanel componentPanel)
 void ofApp::draw()
 {
 	//
-	helpImage.draw(helpImageX,helpImageY,helpImageWidth,helpImageHeight);
+	helpImage.draw(helpImageX, helpImageY, helpImageWidth, helpImageHeight);
 	//
 	drawAll(horizontalPanel);
+	drawAll(verticalPanel);
 
 	if (leftViewer.isImageNow)
 	{
@@ -332,12 +369,19 @@ void ofApp::draw()
 		ofSetLineWidth(4.5); // A higher value will render thicker lines
 		ofDrawRectangle(rightViewer.x, rightViewer.y, rightViewer.height, rightViewer.width);
 	}
+}
 
+void ofApp::addFilterClick(ofxDatGuiButtonEvent e)
+{
+	cout << "addFilterClick" << endl;
+	auto x = createFilterButton(this);
+
+	verticalPanel.push(x);
 }
 
 void ofApp::addMediaClick(ofxDatGuiButtonEvent e)
 {
-	cout << "+" << endl;
+	cout << "addMediaClick" << endl;
 	auto x = createMediaButton(this);
 	horizontalPanel.push(x);
 }
