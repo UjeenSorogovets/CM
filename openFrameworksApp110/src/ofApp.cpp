@@ -79,67 +79,110 @@ public:
 
 		component.startPosX = startPosX;
 		component.startPosY = startPosY;
-		//
-		component.currentPosX = component.startPosX;
-		component.currentPosY = component.startPosY;
-		//
+
 		component.component->setHeight(componentHeight);
 		component.component->setWidth(componentWidth, 0);
 
 		component.height = componentHeight;
 		component.width = componentWidth;
+
 		if (component.videoPath != "")
 		{
 			if (size == 0)
 			{
-				//cout << "if push!" << endl;
 				component.component->setPosition(startPosX, startPosY);
-				components.push_back(component);
+
+				cout << "add" << component.startPosX << endl;
 			}
 			else
 			{
 				if (horizontal)
 				{
-					component.startPosX = startPosX * (size + 1) + offsetX * (size);
+					component.startPosX = startPosX + component.width * (size) + offsetX * (size);
+					cout << "add"<< component.startPosX << endl;
 				}
 				else
 				{
 					component.startPosY = startPosY * (size + 1) + offsetY * (size);
 				}
 
-				//cout << "else push!" << endl;
 				component.component->setPosition(component.startPosX, component.startPosY);
-				components.push_back(component);
 			}
 
-			int x = component.component->getX();
-			int y = component.component->getY();
-			//cout << "X = " << x << "\nY = " << y << endl;
-			//cout << endl;
-			//cout << "X = " << component.startPosX << "\nY = " << component.startPosY << endl;
+			component.currentPosX = component.startPosX;
+			component.currentPosY = component.startPosY;
+
+			/*cout << "start:" << endl;
+			cout << "X = " << component.startPosX << "\nY = " << component.startPosY << endl;
+			cout << "current:" << endl;
+			cout << "X = " << component.currentPosX << "\nY = " << component.currentPosY << endl;*/
+
+			components.push_back(component);
 		}
 	}
 };
 
 ComponentPanel horizontalPanel;
 
-void ofApp::mouseDragged(int x, int y, int button) {
-	isMousePressed = true;
+int catchMediaButton(int x, int y)
+{
+	int buttonNumber = -1;
 
-	if (horizontalPanel.components.size() > 0)
+	for (int i = 0; i < horizontalPanel.components.size(); i++)
 	{
-		horizontalPanel.components[0].currentPosX = x;
-		horizontalPanel.components[0].currentPosY = y;
+		Component currentComponent = horizontalPanel.components[i];
 
-		horizontalPanel.components[0].component->setPosition(x, y);
+		if ((x >= currentComponent.currentPosX && y >= currentComponent.currentPosY) && (x <= currentComponent.currentPosX + currentComponent.width && y <= currentComponent.currentPosY + currentComponent.height))
+		{
+			cout << currentComponent.component->getLabel() << endl;
+
+			try {
+				int res = stoi(currentComponent.component->getLabel());
+				return res;
+			}
+			catch (std::invalid_argument e) {
+				//cout << "Caught Invalid Argument Exception from catchMediaButton \n";
+			}
+		}
+	}
+	return buttonNumber;
+}
+
+ofImage helpImage;
+int helpImageX;
+int helpImageY;
+int helpImageWidth;
+int helpImageHeight;
+
+int choosedButtonNumber = -1;
+void ofApp::mouseDragged(int x, int y, int button) {
+	
+
+	if (choosedButtonNumber == -1)
+	{
+		choosedButtonNumber = catchMediaButton(x, y);
+	}
+	else if (choosedButtonNumber != -1 && choosedButtonNumber <= horizontalPanel.components.size())
+	{
+		isMousePressed = true;
+		helpImage = horizontalPanel.components[choosedButtonNumber].image;
+		helpImageX = horizontalPanel.components[choosedButtonNumber].startPosX;
+		helpImageY = horizontalPanel.components[choosedButtonNumber].startPosY;
+		helpImageWidth = horizontalPanel.components[choosedButtonNumber].width;
+		helpImageHeight = horizontalPanel.components[choosedButtonNumber].height;
+		//
+		horizontalPanel.components[choosedButtonNumber].currentPosX = x;
+		horizontalPanel.components[choosedButtonNumber].currentPosY = y;
 	}
 }
-//
 
 Component createMediaButton(ofApp* ofApp)
 {
 	Component component;
 	component.component = new ofxDatGuiButton("---");
+	//
+	
+	//
 	component.component->setOpacity(0.0f);
 	component.component->onButtonEvent(ofApp, &ofApp::onButtonEvent);
 
@@ -221,6 +264,8 @@ void ofApp::update()
 
 	rightViewer.imagePlayer.update();
 	rightViewer.videoPlayer.update();
+	//
+	helpImage.update();
 }
 
 void drawAll(Component component)
@@ -240,6 +285,9 @@ void drawAll(ComponentPanel componentPanel)
 
 void ofApp::draw()
 {
+	//
+	helpImage.draw(helpImageX,helpImageY,helpImageWidth,helpImageHeight);
+	//
 	drawAll(horizontalPanel);
 
 	if (leftViewer.isImageNow)
@@ -296,18 +344,16 @@ void ofApp::addMediaClick(ofxDatGuiButtonEvent e)
 
 void ofApp::onButtonEvent(ofxDatGuiButtonEvent e)
 {
+	helpImage.clear();
+
 	for (int i = 0; i < horizontalPanel.components.size(); i++)
 	{
 		horizontalPanel.components[i].currentPosX = horizontalPanel.components[i].startPosX;
 		horizontalPanel.components[i].currentPosY = horizontalPanel.components[i].startPosY;
 	}
-	for each (Component component in horizontalPanel.components)
-	{
-		component.currentPosX = component.startPosX;
-		component.currentPosY = component.startPosY;
-	}
-	//
+
 	isMousePressed = false;
+	choosedButtonNumber = -1;
 
 	cout << "onButtonEvent: " << e.target->getLabel() << endl;
 
