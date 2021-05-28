@@ -138,7 +138,7 @@ int catchMediaButton(int x, int y)
 {
 	int buttonNumber = -1;
 
-	for (int i = 0; i < horizontalPanel.components.size(); i++)
+	for (int i = 1; i < horizontalPanel.components.size(); i++)
 	{
 		Component currentComponent = horizontalPanel.components[i];
 
@@ -155,6 +155,10 @@ int catchMediaButton(int x, int y)
 			}
 		}
 	}
+	if ((x >= horizontalPanel.startPosX && y >= horizontalPanel.startPosY) && (x <= horizontalPanel.startPosX + horizontalPanel.componentWidth && y <= horizontalPanel.startPosY + horizontalPanel.componentHeight))
+	{
+		return 0;
+	}
 	return buttonNumber;
 }
 
@@ -167,6 +171,8 @@ int helpImageHeight;
 int choosedButtonNumber = -1;
 int offsetDragX = 0;
 int offsetDragY = 0;
+
+bool isMouseClicked = false;
 
 void ofApp::mouseDragged(int x, int y, int button) {
 	if (choosedButtonNumber == -1)
@@ -191,6 +197,100 @@ void ofApp::mouseDragged(int x, int y, int button) {
 		horizontalPanel.components[choosedButtonNumber].currentPosX = x + offsetDragX;
 		horizontalPanel.components[choosedButtonNumber].currentPosY = y + offsetDragY;
 	}
+}
+
+void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
+{
+	try {
+		if (horizontalPanel.components[res].type == IMAGE)
+		{
+			cout << "IMAGE" << endl;
+			mediaViewer->isImageNow = true;
+			auto img = horizontalPanel.components[res].image;
+			mediaViewer->imagePlayer = img;
+		}
+		else if (horizontalPanel.components[res].type == VIDEO)
+		{
+			cout << "VIDEO" << endl;
+
+			mediaViewer->isImageNow = false;
+			mediaViewer->videoPlayer.load(horizontalPanel.components[res].path);
+			mediaViewer->videoPlayer.play();
+		}
+		else
+		{
+			cout << "FILTER OR OTHER" << endl;
+		}
+	}
+	catch (std::invalid_argument e) {
+		cout << "Caught Invalid Argument Exception\n";
+	}
+}
+
+void ofApp::mousePressed(int x, int y, int button) {
+	//cout << "mousePressed" << endl;
+	isMouseClicked = true;
+	//cout << "isMouseClicked = " << isMouseClicked << endl;
+	int horizntalPanelEndX = horizontalPanel.startPosX + horizontalPanel.componentWidth * (horizontalPanel.components.size())+horizontalPanel.offsetX * (horizontalPanel.components.size()-1);
+	int horizntalPanelEndY = horizontalPanel.startPosY + horizontalPanel.componentHeight;
+	cout <<"\nhorizntalPanelEndX = " << horizntalPanelEndX << endl;
+	cout <<"horizntalPanelEndY = " << horizntalPanelEndY << endl;
+	if (x>=horizontalPanel.startPosX && y>=horizontalPanel.startPosY &&x<= horizntalPanelEndX&&y<=horizntalPanelEndY)
+	{
+		cout << "maybe u in hor panel" << endl;
+		choosedButtonNumber = catchMediaButton(x, y);
+		cout <<"choosedButtonNumber = "<< choosedButtonNumber << endl;
+	}
+}
+
+void ofApp::mouseReleased(int x, int y, int button) {
+	//cout << "mouseReleased" << endl;
+	isMouseClicked = false;
+	if (choosedButtonNumber!=-1)
+	{
+		cout << "isMouseClicked = " << isMouseClicked << endl;
+
+		helpImage.clear();
+
+		for (int i = 0; i < horizontalPanel.components.size(); i++)
+		{
+			horizontalPanel.components[i].currentPosX = horizontalPanel.components[i].startPosX;
+			horizontalPanel.components[i].currentPosY = horizontalPanel.components[i].startPosY;
+		}
+
+		isMousePressed = false;
+
+		//int res = stoi(e.target->getLabel());
+		int res = choosedButtonNumber;
+
+		auto end = std::chrono::system_clock::now();
+		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+		cout << "\nonButtonEvent N : " << res << " at " << std::ctime(&end_time) << endl;
+
+		int x = mouseX;
+		int y = mouseY;
+		cout << x << endl;
+		cout << y << endl;
+
+		if ((x >= leftViewer.x && y >= leftViewer.y) && (x <= leftViewer.x + leftViewer.width && y <= leftViewer.y + leftViewer.height))
+		{
+			cout << "leftMedia" << endl;
+			runInCurrentPlayer(&leftViewer, res);
+		}
+		else if ((x >= rightViewer.x && y >= rightViewer.y) && (x <= rightViewer.x + rightViewer.width && y <= rightViewer.y + rightViewer.height))
+		{
+			cout << "rightMedia" << endl;
+			runInCurrentPlayer(&rightViewer, res);
+		}
+		else
+		{
+			cout << "can't load!" << endl;
+		}
+
+		choosedButtonNumber = -1;
+	}
+	//cout << "isMouseClicked = " << isMouseClicked << endl;
+	
 }
 
 Component createFilterButton(ofApp* ofApp)
@@ -262,7 +362,6 @@ Component createMediaButton(ofApp* ofApp)
 		if (!component.metaData.save(xmlPath))
 		{
 			cout << "xml save error [" << xmlPath << "]" << endl;
-
 		}
 	}
 	component.image = image;
@@ -423,103 +522,53 @@ void ofApp::addFilterClick(ofxDatGuiButtonEvent e)
 void ofApp::addMediaClick(ofxDatGuiButtonEvent e)
 {
 	cout << "addMediaClick" << endl;
-	auto x = createMediaButton(this);
-	horizontalPanel.push(x);
+	auto mediaButton = createMediaButton(this);
+	horizontalPanel.push(mediaButton);
 }
 
 void ofApp::onButtonEvent(ofxDatGuiButtonEvent e)
 {
-	helpImage.clear();
+	
+		/*cout <<"isMouseClicked = " << isMouseClicked << endl;
+	
+		helpImage.clear();
 
-	for (int i = 0; i < horizontalPanel.components.size(); i++)
-	{
-		horizontalPanel.components[i].currentPosX = horizontalPanel.components[i].startPosX;
-		horizontalPanel.components[i].currentPosY = horizontalPanel.components[i].startPosY;
-	}
-
-	isMousePressed = false;
-	choosedButtonNumber = -1;
-
-	cout << "onButtonEvent: " << e.target->getLabel() << endl;
-
-	int x = mouseX;
-	int y = mouseY;
-	//cout << x << endl;
-	//cout << y << endl;
-	cout << "" << endl;
-	int res = stoi(e.target->getLabel());
-	for (int i = 0; i < horizontalPanel.components.size(); i++)
-	{
-		auto x = horizontalPanel.components[i].type;
-		cout << "TYPE = " << x << endl;
-	}
-	if ((x >= leftViewer.x && y >= leftViewer.y) && (x <= leftViewer.x + leftViewer.width && y <= leftViewer.y + leftViewer.height))
-	{
-		cout << "leftMedia" << endl;
-		try {
-			int res = stoi(e.target->getLabel());
-			cout << "Integer: " << res << endl;
-			if (horizontalPanel.components[res].type == IMAGE)
-			{
-				cout << "IMAGE" << endl;
-				leftViewer.isImageNow = true;
-				auto img = horizontalPanel.components[res].image;
-				leftViewer.imagePlayer = img;
-			}
-			else if (horizontalPanel.components[res].type == VIDEO)
-			{
-				cout << "VIDEO" << endl;
-
-				leftViewer.isImageNow = false;
-				leftViewer.videoPlayer.load(horizontalPanel.components[res].path);
-				leftViewer.videoPlayer.play();
-			}
-			else
-			{
-				cout << "FILTER OR OTHER" << endl;
-			}
-
-		}
-		catch (std::invalid_argument e) {
-			cout << "Caught Invalid Argument Exception\n";
+		for (int i = 0; i < horizontalPanel.components.size(); i++)
+		{
+			horizontalPanel.components[i].currentPosX = horizontalPanel.components[i].startPosX;
+			horizontalPanel.components[i].currentPosY = horizontalPanel.components[i].startPosY;
 		}
 
-	}
-	else if ((x >= rightViewer.x && y >= rightViewer.y) && (x <= rightViewer.x + rightViewer.width && y <= rightViewer.y + rightViewer.height))
-	{
-		cout << "rightMedia" << endl;
-		try {
-			int res = stoi(e.target->getLabel());
-			cout << "Integer: " << res << endl;
-			if (horizontalPanel.components[res].type == IMAGE)
-			{
-				cout << "IMAGE" << endl;
-				rightViewer.isImageNow = true;
-				auto img = horizontalPanel.components[res].image;
-				rightViewer.imagePlayer = img;
-			}
-			else if (horizontalPanel.components[res].type == VIDEO)
-			{
-				cout << "VIDEO" << endl;
+		isMousePressed = false;
+		choosedButtonNumber = -1;
 
-				rightViewer.isImageNow = false;
-				rightViewer.videoPlayer.load(horizontalPanel.components[res].path);
-				rightViewer.videoPlayer.play();
-			}
-			else
-			{
-				cout << "FILTER OR OTHER" << endl;
-			}
+		int res = stoi(e.target->getLabel());
+
+		auto end = std::chrono::system_clock::now();
+		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+		cout << "\nonButtonEvent N : " << res << " at " << std::ctime(&end_time) << endl;
+
+		int x = mouseX;
+		int y = mouseY;
+		cout << x << endl;
+		cout << y << endl;
+
+		if ((x >= leftViewer.x && y >= leftViewer.y) && (x <= leftViewer.x + leftViewer.width && y <= leftViewer.y + leftViewer.height))
+		{
+			cout << "leftMedia" << endl;
+			runInCurrentPlayer(&leftViewer, res);
 		}
-		catch (std::invalid_argument e) {
-			cout << "Caught Invalid Argument Exception\n";
+		else if ((x >= rightViewer.x && y >= rightViewer.y) && (x <= rightViewer.x + rightViewer.width && y <= rightViewer.y + rightViewer.height))
+		{
+			cout << "rightMedia" << endl;
+			runInCurrentPlayer(&rightViewer, res);
 		}
-		rightViewer.videoPlayer.play();
-	}
-	else
-	{
-		cout << "can't load!" << endl;
-	}
+		else
+		{
+			cout << "can't load!" << endl;
+		}
+	*/
+	
 }
 
 void ofApp::onToggleEvent(ofxDatGuiToggleEvent e)
