@@ -7,8 +7,14 @@ public:
 	ofVideoPlayer videoPlayer;
 	ofImage imagePlayer;
 
+	int startX;
+	int startY;
+
 	int x;
 	int y;
+
+	int maxHeight;
+	int maxWidth;
 
 	int height;
 	int width;
@@ -22,8 +28,12 @@ public:
 
 	MediaViewer(int x_, int y_, int width_, int height_)
 	{
+		startX = x_;
+		startY = y_;
 		x = x_;
 		y = y_;
+		maxHeight = height_;
+		maxWidth = width_;
 		height = height_;
 		width = width_;
 	}
@@ -216,6 +226,34 @@ void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
 			mediaViewer->isImageNow = false;
 			mediaViewer->videoPlayer.load(horizontalPanel.components[res].path);
 			mediaViewer->videoPlayer.play();
+
+			auto height = mediaViewer->videoPlayer.getHeight();
+			auto width = mediaViewer->videoPlayer.getWidth();
+			//
+			auto maxHeight = mediaViewer->maxHeight;
+			auto maxWidth = mediaViewer->maxWidth;
+			//
+			//
+			if (width>height)
+			{
+				cout << "width>height" << endl;
+				mediaViewer->height = maxHeight/(width/height);
+				mediaViewer->width = maxWidth;
+
+				mediaViewer->y = mediaViewer->startY + (maxHeight - mediaViewer->height) / 2;
+				mediaViewer->x = mediaViewer->startX;
+			}
+			else
+			{
+				cout << "width<height" << endl;
+				mediaViewer->height = maxHeight;
+				mediaViewer->width = maxWidth*(width/height);
+
+				mediaViewer->y = mediaViewer->startY;
+				mediaViewer->x = mediaViewer->startX + (maxWidth - mediaViewer->width) / 2;
+			}
+
+			cout << "height/width = " << height << "/" << width << endl;
 		}
 		else
 		{
@@ -237,7 +275,6 @@ void ofApp::mousePressed(int x, int y, int button) {
 	cout <<"horizntalPanelEndY = " << horizntalPanelEndY << endl;
 	if (x>=horizontalPanel.startPosX && y>=horizontalPanel.startPosY &&x<= horizntalPanelEndX&&y<=horizntalPanelEndY)
 	{
-		cout << "maybe u in hor panel" << endl;
 		choosedButtonNumber = catchMediaButton(x, y);
 		cout <<"choosedButtonNumber = "<< choosedButtonNumber << endl;
 	}
@@ -272,12 +309,12 @@ void ofApp::mouseReleased(int x, int y, int button) {
 		cout << x << endl;
 		cout << y << endl;
 
-		if ((x >= leftViewer.x && y >= leftViewer.y) && (x <= leftViewer.x + leftViewer.width && y <= leftViewer.y + leftViewer.height))
+		if ((x >= leftViewer.startX && y >= leftViewer.startY) && (x <= leftViewer.startX + leftViewer.maxWidth && y <= leftViewer.startY + leftViewer.maxHeight))
 		{
 			cout << "leftMedia" << endl;
 			runInCurrentPlayer(&leftViewer, res);
 		}
-		else if ((x >= rightViewer.x && y >= rightViewer.y) && (x <= rightViewer.x + rightViewer.width && y <= rightViewer.y + rightViewer.height))
+		if ((x >= rightViewer.startX && y >= rightViewer.startY) && (x <= rightViewer.startX + rightViewer.maxWidth && y <= rightViewer.startY + rightViewer.maxHeight))
 		{
 			cout << "rightMedia" << endl;
 			runInCurrentPlayer(&rightViewer, res);
@@ -469,20 +506,20 @@ void ofApp::draw()
 
 	if (leftViewer.isImageNow)
 	{
-		leftViewer.imagePlayer.draw(leftViewer.x, leftViewer.y, leftViewer.height, leftViewer.width);
+		leftViewer.imagePlayer.draw(leftViewer.x, leftViewer.y, leftViewer.width, leftViewer.height);
 	}
 	else
 	{
-		leftViewer.videoPlayer.draw(leftViewer.x, leftViewer.y, leftViewer.height, leftViewer.width);
+		leftViewer.videoPlayer.draw(leftViewer.x, leftViewer.y, leftViewer.width, leftViewer.height);
 	}
 
 	if (rightViewer.isImageNow)
 	{
-		rightViewer.imagePlayer.draw(rightViewer.x, rightViewer.y, rightViewer.height, rightViewer.width);
+		rightViewer.imagePlayer.draw(rightViewer.x, rightViewer.y, rightViewer.width, rightViewer.height);
 	}
 	else
 	{
-		rightViewer.videoPlayer.draw(rightViewer.x, rightViewer.y, rightViewer.height, rightViewer.width);
+		rightViewer.videoPlayer.draw(rightViewer.x, rightViewer.y, rightViewer.width, rightViewer.height);
 	}
 
 	for (int i = 0; i < components.size(); i++) components[i]->draw();
@@ -503,11 +540,11 @@ void ofApp::draw()
 	{
 		ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
 		ofSetLineWidth(4.5); // A higher value will render thicker lines
-		ofDrawRectangle(leftViewer.x, leftViewer.y, leftViewer.height, leftViewer.width);
+		ofDrawRectangle(leftViewer.startX, leftViewer.startY, leftViewer.maxWidth, leftViewer.maxHeight);
 
 		ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
 		ofSetLineWidth(4.5); // A higher value will render thicker lines
-		ofDrawRectangle(rightViewer.x, rightViewer.y, rightViewer.height, rightViewer.width);
+		ofDrawRectangle(rightViewer.startX, rightViewer.startY, rightViewer.maxWidth, rightViewer.maxHeight);
 	}
 }
 
@@ -526,49 +563,7 @@ void ofApp::addMediaClick(ofxDatGuiButtonEvent e)
 	horizontalPanel.push(mediaButton);
 }
 
-void ofApp::onButtonEvent(ofxDatGuiButtonEvent e)
-{
-	
-		/*cout <<"isMouseClicked = " << isMouseClicked << endl;
-	
-		helpImage.clear();
-
-		for (int i = 0; i < horizontalPanel.components.size(); i++)
-		{
-			horizontalPanel.components[i].currentPosX = horizontalPanel.components[i].startPosX;
-			horizontalPanel.components[i].currentPosY = horizontalPanel.components[i].startPosY;
-		}
-
-		isMousePressed = false;
-		choosedButtonNumber = -1;
-
-		int res = stoi(e.target->getLabel());
-
-		auto end = std::chrono::system_clock::now();
-		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-		cout << "\nonButtonEvent N : " << res << " at " << std::ctime(&end_time) << endl;
-
-		int x = mouseX;
-		int y = mouseY;
-		cout << x << endl;
-		cout << y << endl;
-
-		if ((x >= leftViewer.x && y >= leftViewer.y) && (x <= leftViewer.x + leftViewer.width && y <= leftViewer.y + leftViewer.height))
-		{
-			cout << "leftMedia" << endl;
-			runInCurrentPlayer(&leftViewer, res);
-		}
-		else if ((x >= rightViewer.x && y >= rightViewer.y) && (x <= rightViewer.x + rightViewer.width && y <= rightViewer.y + rightViewer.height))
-		{
-			cout << "rightMedia" << endl;
-			runInCurrentPlayer(&rightViewer, res);
-		}
-		else
-		{
-			cout << "can't load!" << endl;
-		}
-	*/
-	
+void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
 }
 
 void ofApp::onToggleEvent(ofxDatGuiToggleEvent e)
