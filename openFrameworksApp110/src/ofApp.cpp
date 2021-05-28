@@ -38,6 +38,13 @@ int p = 200;
 
 bool isMousePressed = false;
 
+enum ComponentType
+{
+	VIDEO,
+	IMAGE,
+	FILTER
+};
+
 class Component
 {
 public:
@@ -53,7 +60,11 @@ public:
 	int height;
 	int width;
 
-	string videoPath = "";
+	ComponentType type;
+
+	string path = "";
+
+	ofXml metaData;
 };
 
 class ComponentPanel
@@ -74,7 +85,7 @@ public:
 
 	void push(Component component)
 	{
-		if (component.videoPath != "")
+		if (component.path != "")
 		{
 			int size = components.size();
 			component.startPosX = startPosX;
@@ -188,7 +199,8 @@ Component createFilterButton(ofApp* ofApp)
 	auto testLabel = "tag " + to_string(verticalPanel.components.size());
 	component.component = new ofxDatGuiButton(testLabel);
 	//component.component->setOpacity(0.0f);
-	component.videoPath = testLabel;
+	component.path = testLabel;
+	component.type = FILTER;
 	//component.component->onButtonEvent(ofApp, &ofApp::onButtonEvent);
 
 	return component;
@@ -207,24 +219,53 @@ Component createMediaButton(ofApp* ofApp)
 	if (result.bSuccess)
 	{
 		string path = result.getPath();
+		string xmlPath = path.substr(0, path.find_last_of(".")) + ".xml";
 		ofVideoPlayer player;
-		player.load(path);
-		if (player.getMoviePath() == "")
+
+		if (!component.metaData.load(xmlPath));
 		{
-			image.load(path);
-			component.videoPath = "image";
+			cout << "xml load error [" << xmlPath << "]" << endl;
+		}
+		auto rootXml = component.metaData.getChild("component");
+		ofXml pathNode, typeNode;
+		if (!rootXml)
+		{
+			rootXml = component.metaData.appendChild("component");
+			typeNode = rootXml.appendChild("type");
+			pathNode = rootXml.appendChild("path");
 		}
 		else
 		{
-			component.videoPath = path;
+			typeNode = rootXml.getChild("type");
+			pathNode = rootXml.getChild("path");
+		}
+		player.load(path);
+		if (player.getMoviePath() == "")
+		{
+			cout << "added image" << endl;
+			image.load(path);
+			component.type = IMAGE;
+			typeNode.set("IMAGE");
+		}
+		else
+		{
+			cout << "added video" << endl;
+			component.type = VIDEO;
+			typeNode.set("VIDEO");
 			player.play();
 			player.setPaused(true);
 			auto x = player.getPixels();
 			image.setFromPixels(x);
 		}
+		component.path = path;
+		pathNode.set(path);
+		if (!component.metaData.save(xmlPath))
+		{
+			cout << "xml save error [" << xmlPath << "]" << endl;
+
+		}
 	}
 	component.image = image;
-
 	return component;
 }
 
@@ -406,29 +447,43 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e)
 	//cout << x << endl;
 	//cout << y << endl;
 	cout << "" << endl;
-
+	int res = stoi(e.target->getLabel());
+	for (int i = 0; i < horizontalPanel.components.size(); i++)
+	{
+		auto x = horizontalPanel.components[i].type;
+		cout << "TYPE = " << x << endl;
+	}
 	if ((x >= leftViewer.x && y >= leftViewer.y) && (x <= leftViewer.x + leftViewer.width && y <= leftViewer.y + leftViewer.height))
 	{
+		cout << "leftMedia" << endl;
 		try {
 			int res = stoi(e.target->getLabel());
 			cout << "Integer: " << res << endl;
-			if (horizontalPanel.components[res].videoPath == "image")
+			if (horizontalPanel.components[res].type == IMAGE)
 			{
 				cout << "IMAGE" << endl;
 				leftViewer.isImageNow = true;
 				auto img = horizontalPanel.components[res].image;
 				leftViewer.imagePlayer = img;
 			}
+			else if (horizontalPanel.components[res].type == VIDEO)
+			{
+				cout << "VIDEO" << endl;
+
+				leftViewer.isImageNow = false;
+				leftViewer.videoPlayer.load(horizontalPanel.components[res].path);
+				leftViewer.videoPlayer.play();
+			}
 			else
 			{
-				leftViewer.isImageNow = false;
+				cout << "FILTER OR OTHER" << endl;
 			}
-			leftViewer.videoPlayer.load(horizontalPanel.components[res].videoPath);
+
 		}
 		catch (std::invalid_argument e) {
 			cout << "Caught Invalid Argument Exception\n";
 		}
-		leftViewer.videoPlayer.play();
+
 	}
 	else if ((x >= rightViewer.x && y >= rightViewer.y) && (x <= rightViewer.x + rightViewer.width && y <= rightViewer.y + rightViewer.height))
 	{
@@ -436,18 +491,25 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e)
 		try {
 			int res = stoi(e.target->getLabel());
 			cout << "Integer: " << res << endl;
-			if (horizontalPanel.components[res].videoPath == "image")
+			if (horizontalPanel.components[res].type == IMAGE)
 			{
 				cout << "IMAGE" << endl;
 				rightViewer.isImageNow = true;
 				auto img = horizontalPanel.components[res].image;
 				rightViewer.imagePlayer = img;
 			}
+			else if (horizontalPanel.components[res].type == VIDEO)
+			{
+				cout << "VIDEO" << endl;
+
+				rightViewer.isImageNow = false;
+				rightViewer.videoPlayer.load(horizontalPanel.components[res].path);
+				rightViewer.videoPlayer.play();
+			}
 			else
 			{
-				rightViewer.isImageNow = false;
+				cout << "FILTER OR OTHER" << endl;
 			}
-			rightViewer.videoPlayer.load(horizontalPanel.components[res].videoPath);
 		}
 		catch (std::invalid_argument e) {
 			cout << "Caught Invalid Argument Exception\n";
