@@ -1,6 +1,8 @@
 #include "ofApp.h"
 #include <string> 
 
+namespace fs = std::filesystem;
+
 class MediaViewer
 {
 public:
@@ -48,11 +50,24 @@ int p = 200;
 
 bool isMousePressed = false;
 
+fs::path baseXmlPath = fs::current_path() / "Xml";
+
 enum ComponentType
 {
+	UNKNOWN = 0,
 	VIDEO,
 	IMAGE,
 	FILTER
+};
+
+class MetaData
+{
+public:
+	ofXml xmlRoot;
+	ofVec2f size;
+	ComponentType type;
+	fs::path contentPath;
+	fs::path xmlPath;
 };
 
 class Component
@@ -74,7 +89,9 @@ public:
 
 	string path = "";
 
-	ofXml metaData;
+	MetaData metaData;
+
+	bool fetchXml();
 };
 
 class ComponentPanel
@@ -234,10 +251,10 @@ void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
 			auto maxWidth = mediaViewer->maxWidth;
 			//
 			//
-			if (width>height)
+			if (width > height)
 			{
 				cout << "width>height" << endl;
-				mediaViewer->height = maxHeight/(width/height);
+				mediaViewer->height = maxHeight / (width / height);
 				mediaViewer->width = maxWidth;
 
 				mediaViewer->y = mediaViewer->startY + (maxHeight - mediaViewer->height) / 2;
@@ -247,7 +264,7 @@ void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
 			{
 				cout << "width<height" << endl;
 				mediaViewer->height = maxHeight;
-				mediaViewer->width = maxWidth*(width/height);
+				mediaViewer->width = maxWidth * (width / height);
 
 				mediaViewer->y = mediaViewer->startY;
 				mediaViewer->x = mediaViewer->startX + (maxWidth - mediaViewer->width) / 2;
@@ -269,21 +286,21 @@ void ofApp::mousePressed(int x, int y, int button) {
 	//cout << "mousePressed" << endl;
 	isMouseClicked = true;
 	//cout << "isMouseClicked = " << isMouseClicked << endl;
-	int horizntalPanelEndX = horizontalPanel.startPosX + horizontalPanel.componentWidth * (horizontalPanel.components.size())+horizontalPanel.offsetX * (horizontalPanel.components.size()-1);
+	int horizntalPanelEndX = horizontalPanel.startPosX + horizontalPanel.componentWidth * (horizontalPanel.components.size()) + horizontalPanel.offsetX * (horizontalPanel.components.size() - 1);
 	int horizntalPanelEndY = horizontalPanel.startPosY + horizontalPanel.componentHeight;
-	cout <<"\nhorizntalPanelEndX = " << horizntalPanelEndX << endl;
-	cout <<"horizntalPanelEndY = " << horizntalPanelEndY << endl;
-	if (x>=horizontalPanel.startPosX && y>=horizontalPanel.startPosY &&x<= horizntalPanelEndX&&y<=horizntalPanelEndY)
+	cout << "\nhorizntalPanelEndX = " << horizntalPanelEndX << endl;
+	cout << "horizntalPanelEndY = " << horizntalPanelEndY << endl;
+	if (x >= horizontalPanel.startPosX && y >= horizontalPanel.startPosY &&x <= horizntalPanelEndX && y <= horizntalPanelEndY)
 	{
 		choosedButtonNumber = catchMediaButton(x, y);
-		cout <<"choosedButtonNumber = "<< choosedButtonNumber << endl;
+		cout << "choosedButtonNumber = " << choosedButtonNumber << endl;
 	}
 }
 
 void ofApp::mouseReleased(int x, int y, int button) {
 	//cout << "mouseReleased" << endl;
 	isMouseClicked = false;
-	if (choosedButtonNumber!=-1)
+	if (choosedButtonNumber != -1)
 	{
 		cout << "isMouseClicked = " << isMouseClicked << endl;
 
@@ -327,7 +344,7 @@ void ofApp::mouseReleased(int x, int y, int button) {
 		choosedButtonNumber = -1;
 	}
 	//cout << "isMouseClicked = " << isMouseClicked << endl;
-	
+
 }
 
 Component createFilterButton(ofApp* ofApp)
@@ -356,52 +373,37 @@ Component createMediaButton(ofApp* ofApp)
 	if (result.bSuccess)
 	{
 		string path = result.getPath();
-		string xmlPath = path.substr(0, path.find_last_of(".")) + ".xml";
 		ofVideoPlayer player;
 
-		if (!component.metaData.load(xmlPath));
-		{
-			cout << "xml load error [" << xmlPath << "]" << endl;
-		}
-		auto rootXml = component.metaData.getChild("component");
-		ofXml pathNode, typeNode;
-		if (!rootXml)
-		{
-			rootXml = component.metaData.appendChild("component");
-			typeNode = rootXml.appendChild("type");
-			pathNode = rootXml.appendChild("path");
-		}
-		else
-		{
-			typeNode = rootXml.getChild("type");
-			pathNode = rootXml.getChild("path");
-		}
-		player.load(path);
-		if (player.getMoviePath() == "")
+		cout << "play load:" << player.load(path) << endl;
+		if (image.load(path))
 		{
 			cout << "added image" << endl;
-			image.load(path);
 			component.type = IMAGE;
-			typeNode.set("IMAGE");
 		}
 		else
 		{
-			cout << "added video" << endl;
-			component.type = VIDEO;
-			typeNode.set("VIDEO");
-			player.play();
-			player.setPaused(true);
-			auto x = player.getPixels();
-			image.setFromPixels(x);
+			if (player.load(path)) {
+				cout << "added video" << endl;
+				component.type = VIDEO;
+				player.play();
+				player.setPaused(true);
+				auto x = player.getPixels();
+				image.setFromPixels(x);
+			}
+			else
+			{
+				cout << "error open file" << endl;
+				component.type = UNKNOWN;
+			}
 		}
+		component.image = image;
 		component.path = path;
-		pathNode.set(path);
-		if (!component.metaData.save(xmlPath))
+		if (!component.fetchXml())
 		{
-			cout << "xml save error [" << xmlPath << "]" << endl;
+			cout << "xml load error [" << component.metaData.xmlPath << "]" << endl;
 		}
 	}
-	component.image = image;
 	return component;
 }
 
@@ -563,7 +565,7 @@ void ofApp::addMediaClick(ofxDatGuiButtonEvent e)
 	horizontalPanel.push(mediaButton);
 }
 
-void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
+void ofApp::onButtonEvent(ofxDatGuiButtonEvent e) {
 }
 
 void ofApp::onToggleEvent(ofxDatGuiToggleEvent e)
@@ -599,4 +601,64 @@ void ofApp::on2dPadEvent(ofxDatGui2dPadEvent e)
 void ofApp::onTextInputEvent(ofxDatGuiTextInputEvent e)
 {
 	cout << "onButtonEvent: " << e.text << endl;
+}
+
+bool Component::fetchXml()
+{
+	metaData.contentPath = path;
+	metaData.xmlPath = baseXmlPath / (metaData.contentPath.filename().replace_extension("xml"));
+
+	if (metaData.xmlRoot.load(metaData.xmlPath))
+	{
+		ofXml mainNode = metaData.xmlRoot.getChild("component");
+		//mainNode.appendChild("contentPath").set(metaData.contentPath.c_str());
+		string type = mainNode.getChild("type").getValue();
+		if (type == "IMAGE")
+		{
+			metaData.type = IMAGE;
+		}
+		else if (type == "VIDEO")
+		{
+			metaData.type = VIDEO;
+		}
+
+		ofXml sizeNode = mainNode.getChild("size");
+		metaData.size.x = sizeNode.getChild("w").getIntValue();
+		metaData.size.y = sizeNode.getChild("h").getIntValue();
+		return true;
+	}
+	else
+	{
+		metaData.type = type;
+		metaData.size = ofVec2f(image.getWidth(), image.getHeight());
+		////////
+		ofXml mainNode = metaData.xmlRoot.appendChild("component");
+		mainNode.appendChild("contentPath").set(metaData.contentPath);
+		ofXml typeNode = mainNode.appendChild("type");
+		switch (metaData.type)
+		{
+		case IMAGE:
+			typeNode.set("IMAGE");
+			break;
+		case VIDEO:
+			typeNode.set("VIDEO");
+			break;
+		default:
+			typeNode.set("UNKNOWN");
+			break;
+		}
+		ofXml sizeNode = mainNode.appendChild("size");
+		sizeNode.appendChild("w").set((int)metaData.size.x);
+		sizeNode.appendChild("h").set((int)metaData.size.y);
+		fs::create_directories(metaData.xmlPath.parent_path());
+		if (metaData.xmlRoot.save(metaData.xmlPath))
+		{
+			cout << "save xml to: [" << metaData.xmlPath << "]" << endl;
+		}
+		else
+		{
+			cout << "error save xml to: [" << metaData.xmlPath << "]" << endl;
+		}
+		return false;
+	}
 }
