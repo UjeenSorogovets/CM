@@ -54,6 +54,7 @@ fs::path baseXmlPath = fs::current_path() / "Xml";
 
 enum ComponentType
 {
+	UNKNOWN = 0,
 	VIDEO,
 	IMAGE,
 	FILTER
@@ -374,29 +375,35 @@ Component createMediaButton(ofApp* ofApp)
 		string path = result.getPath();
 		ofVideoPlayer player;
 
-		player.load(path);
-		if (player.getMoviePath() == "")
+		cout << "play load:" << player.load(path) << endl;
+		if (image.load(path))
 		{
 			cout << "added image" << endl;
-			image.load(path);
 			component.type = IMAGE;
 		}
 		else
 		{
-			cout << "added video" << endl;
-			component.type = VIDEO;
-			player.play();
-			player.setPaused(true);
-			auto x = player.getPixels();
-			image.setFromPixels(x);
+			if (player.load(path)) {
+				cout << "added video" << endl;
+				component.type = VIDEO;
+				player.play();
+				player.setPaused(true);
+				auto x = player.getPixels();
+				image.setFromPixels(x);
+			}
+			else
+			{
+				cout << "error open file" << endl;
+				component.type = UNKNOWN;
+			}
 		}
+		component.image = image;
 		component.path = path;
-		if (!component.fetchXml());
+		if (!component.fetchXml())
 		{
 			cout << "xml load error [" << component.metaData.xmlPath << "]" << endl;
 		}
 	}
-	component.image = image;
 	return component;
 }
 
@@ -612,7 +619,7 @@ bool Component::fetchXml()
 		}
 		else if (type == "VIDEO")
 		{
-			metaData.type == VIDEO;
+			metaData.type = VIDEO;
 		}
 
 		ofXml sizeNode = mainNode.getChild("size");
@@ -623,7 +630,7 @@ bool Component::fetchXml()
 	else
 	{
 		metaData.type = type;
-		metaData.size = ofVec2f(width, height);
+		metaData.size = ofVec2f(image.getWidth(), image.getHeight());
 		////////
 		ofXml mainNode = metaData.xmlRoot.appendChild("component");
 		mainNode.appendChild("contentPath").set(metaData.contentPath);
