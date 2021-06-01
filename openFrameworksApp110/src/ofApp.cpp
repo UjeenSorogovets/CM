@@ -15,20 +15,13 @@ bool isMousePressed = false;
 ComponentPanel horizontalPanel;
 ComponentPanel verticalPanel;
 
-bool inViewerCondition(int x, int y, MediaViewer* mediaViewer)
-{
-	bool condition = (x >= mediaViewer->startX && y >= mediaViewer->startY) &&
-		(x <= mediaViewer->startX + mediaViewer->maxWidth && y <= mediaViewer->startY + mediaViewer->maxHeight);
-	return condition;
-}
-
-int catchMediaButton(int x, int y)
+int catchMediaButton(int x, int y, ComponentPanel* componentPanel)
 {
 	int buttonNumber = -1;
 
-	for (int i = 1; i < horizontalPanel.components.size(); i++)
+	for (int i = 1; i < componentPanel->components.size(); i++)
 	{
-		Component currentComponent = horizontalPanel.components[i];
+		Component currentComponent = componentPanel->components[i];
 
 		if ((x >= currentComponent.currentPosX && y >= currentComponent.currentPosY) && (x <= currentComponent.currentPosX + currentComponent.width && y <= currentComponent.currentPosY + currentComponent.height))
 		{
@@ -43,7 +36,7 @@ int catchMediaButton(int x, int y)
 			}
 		}
 	}
-	if ((x >= horizontalPanel.startPosX && y >= horizontalPanel.startPosY) && (x <= horizontalPanel.startPosX + horizontalPanel.componentWidth && y <= horizontalPanel.startPosY + horizontalPanel.componentHeight))
+	if ((x >= componentPanel->startPosX && y >= componentPanel->startPosY) && (x <= componentPanel->startPosX + componentPanel->componentWidth && y <= componentPanel->startPosY + componentPanel->componentHeight))
 	{
 		return 0;
 	}
@@ -65,7 +58,7 @@ bool isMouseClicked = false;
 void ofApp::mouseDragged(int x, int y, int button) {
 	if (choosedButtonNumber == -1)
 	{
-		choosedButtonNumber = catchMediaButton(x, y);
+		choosedButtonNumber = catchMediaButton(x, y, &horizontalPanel);
 		if (choosedButtonNumber != -1 && choosedButtonNumber <= horizontalPanel.components.size())
 		{
 			offsetDragX = horizontalPanel.components[choosedButtonNumber].startPosX - x;
@@ -156,28 +149,24 @@ void ofApp::mousePressed(int x, int y, int button) {
 
 	if (inHorizontalPanelCondition)
 	{
-		choosedButtonNumber = catchMediaButton(x, y);
+		choosedButtonNumber = catchMediaButton(x, y, &horizontalPanel);
 		cout << "choosedButtonNumber = " << choosedButtonNumber << endl;
 	}
 	else if (leftViewerCondition)
 	{
-		cout << "leftViewerCondition click!" << endl;
+		//cout << "leftViewerCondition click!" << endl;
 		playPausePlayer(&leftViewer);
 	}
 	else if (rightViewerCondition)
 	{
-		cout << "rightViewerCondition click!" << endl;
+		//cout << "rightViewerCondition click!" << endl;
 		playPausePlayer(&rightViewer);
 	}
 	else
 	{
 		cout << "mousePressed for nothing" << endl;
 	}
-
-
 }
-
-
 
 void ofApp::mouseReleased(int x, int y, int button) {
 	isMouseClicked = false;
