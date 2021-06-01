@@ -125,11 +125,26 @@ void ofApp::mousePressed(int x, int y, int button) {
 	int horizntalPanelEndY = horizontalPanel.startPosY + horizontalPanel.componentHeight;
 	cout << "\nhorizntalPanelEndX = " << horizntalPanelEndX << endl;
 	cout << "horizntalPanelEndY = " << horizntalPanelEndY << endl;
-	if (x >= horizontalPanel.startPosX && y >= horizontalPanel.startPosY &&x <= horizntalPanelEndX && y <= horizntalPanelEndY)
+
+	bool inHorizontalPanelCondition = (x >= horizontalPanel.startPosX && y >= horizontalPanel.startPosY && x <= horizntalPanelEndX && y <= horizntalPanelEndY);
+
+
+	if (inHorizontalPanelCondition)
 	{
 		choosedButtonNumber = catchMediaButton(x, y);
 		cout << "choosedButtonNumber = " << choosedButtonNumber << endl;
 	}
+	else if (true)
+	{
+
+	}
+}
+
+bool inViewerCondition(int x, int y, MediaViewer* mediaViewer)
+{
+	bool condition = (x >= mediaViewer->startX && y >= mediaViewer->startY) &&
+					 (x <= mediaViewer->startX + mediaViewer->maxWidth && y <= mediaViewer->startY + mediaViewer->maxHeight);
+	return condition;
 }
 
 void ofApp::mouseReleased(int x, int y, int button) {
@@ -156,9 +171,9 @@ void ofApp::mouseReleased(int x, int y, int button) {
 		cout << x << endl;
 		cout << y << endl;
 
-		bool leftViewerCondition = (x >= leftViewer.startX && y >= leftViewer.startY) && (x <= leftViewer.startX + leftViewer.maxWidth && y <= leftViewer.startY + leftViewer.maxHeight);
-		bool rightViewerCondition = (x >= rightViewer.startX && y >= rightViewer.startY) && (x <= rightViewer.startX + rightViewer.maxWidth && y <= rightViewer.startY + rightViewer.maxHeight);
-		
+		bool leftViewerCondition = inViewerCondition(x,y, &leftViewer);
+		bool rightViewerCondition = inViewerCondition(x, y, &rightViewer);
+
 		if (leftViewerCondition)
 		{
 			cout << "leftMedia" << endl;
