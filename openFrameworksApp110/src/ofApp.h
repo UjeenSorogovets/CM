@@ -151,10 +151,6 @@ public:
 };
 
 
-class ApiUI
-{
-
-};
 
 static void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaType)
 {
