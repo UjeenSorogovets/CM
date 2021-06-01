@@ -15,12 +15,7 @@ bool isMousePressed = false;
 ComponentPanel horizontalPanel;
 ComponentPanel verticalPanel;
 
-bool inViewerCondition(int x, int y, MediaViewer* mediaViewer)
-{
-	bool condition = (x >= mediaViewer->startX && y >= mediaViewer->startY) &&
-		(x <= mediaViewer->startX + mediaViewer->maxWidth && y <= mediaViewer->startY + mediaViewer->maxHeight);
-	return condition;
-}
+
 
 int catchMediaButton(int x, int y)
 {
@@ -161,12 +156,12 @@ void ofApp::mousePressed(int x, int y, int button) {
 	}
 	else if (leftViewerCondition)
 	{
-		cout << "leftViewerCondition click!" << endl;
+		//cout << "leftViewerCondition click!" << endl;
 		playPausePlayer(&leftViewer);
 	}
 	else if (rightViewerCondition)
 	{
-		cout << "rightViewerCondition click!" << endl;
+		//cout << "rightViewerCondition click!" << endl;
 		playPausePlayer(&rightViewer);
 	}
 	else

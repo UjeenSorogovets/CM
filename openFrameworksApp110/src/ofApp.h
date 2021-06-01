@@ -193,6 +193,12 @@ static void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaTyp
 	cout << "height/width = " << height << "/" << width << endl;
 }
 
+static bool inViewerCondition(int x, int y, MediaViewer* mediaViewer)
+{
+	bool condition = (x >= mediaViewer->startX && y >= mediaViewer->startY) &&
+		(x <= mediaViewer->startX + mediaViewer->maxWidth && y <= mediaViewer->startY + mediaViewer->maxHeight);
+	return condition;
+}
 
 class ofApp : public ofBaseApp{
 
