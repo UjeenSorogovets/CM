@@ -80,20 +80,24 @@ void ofApp::mouseDragged(int x, int y, int button) {
 	}
 }
 
+
 void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
 {
 	try {
-		if (horizontalPanel.components[res].type == IMAGE)
+		auto mediaType = horizontalPanel.components[res].type;
+		if (mediaType == IMAGE)
 		{
-			//clear video if get image
-			mediaViewer->videoPlayer.stop();
-			//
 			cout << "IMAGE" << endl;
+			//stop video if get image
+			mediaViewer->videoPlayer.stop();
+			
 			mediaViewer->isImageNow = true;
 			auto img = horizontalPanel.components[res].image;
 			mediaViewer->imagePlayer = img;
+			
+			resizePlayerToMedia(mediaViewer, mediaType);
 		}
-		else if (horizontalPanel.components[res].type == VIDEO)
+		else if (mediaType == VIDEO)
 		{
 			cout << "VIDEO" << endl;
 
@@ -101,32 +105,7 @@ void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
 			mediaViewer->videoPlayer.load(horizontalPanel.components[res].path);
 			mediaViewer->videoPlayer.play();
 
-			auto height = mediaViewer->videoPlayer.getHeight();
-			auto width = mediaViewer->videoPlayer.getWidth();
-			
-			auto maxHeight = mediaViewer->maxHeight;
-			auto maxWidth = mediaViewer->maxWidth;
-
-			if (width > height)
-			{
-				cout << "width>height" << endl;
-				mediaViewer->height = maxHeight / (width / height);
-				mediaViewer->width = maxWidth;
-
-				mediaViewer->y = mediaViewer->startY + (maxHeight - mediaViewer->height) / 2;
-				mediaViewer->x = mediaViewer->startX;
-			}
-			else
-			{
-				cout << "width<height" << endl;
-				mediaViewer->height = maxHeight;
-				mediaViewer->width = maxWidth * (width / height);
-
-				mediaViewer->y = mediaViewer->startY;
-				mediaViewer->x = mediaViewer->startX + (maxWidth - mediaViewer->width) / 2;
-			}
-
-			cout << "height/width = " << height << "/" << width << endl;
+			resizePlayerToMedia(mediaViewer, mediaType);
 		}
 		else
 		{
@@ -154,7 +133,6 @@ void ofApp::mousePressed(int x, int y, int button) {
 }
 
 void ofApp::mouseReleased(int x, int y, int button) {
-	//cout << "mouseReleased" << endl;
 	isMouseClicked = false;
 	if (choosedButtonNumber != -1)
 	{
@@ -173,21 +151,20 @@ void ofApp::mouseReleased(int x, int y, int button) {
 		//int res = stoi(e.target->getLabel());
 		int res = choosedButtonNumber;
 
-		auto end = std::chrono::system_clock::now();
-		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-		cout << "\nonButtonEvent N : " << res << " at " << std::ctime(&end_time) << endl;
-
 		int x = mouseX;
 		int y = mouseY;
 		cout << x << endl;
 		cout << y << endl;
 
-		if ((x >= leftViewer.startX && y >= leftViewer.startY) && (x <= leftViewer.startX + leftViewer.maxWidth && y <= leftViewer.startY + leftViewer.maxHeight))
+		bool leftViewerCondition = (x >= leftViewer.startX && y >= leftViewer.startY) && (x <= leftViewer.startX + leftViewer.maxWidth && y <= leftViewer.startY + leftViewer.maxHeight);
+		bool rightViewerCondition = (x >= rightViewer.startX && y >= rightViewer.startY) && (x <= rightViewer.startX + rightViewer.maxWidth && y <= rightViewer.startY + rightViewer.maxHeight);
+		
+		if (leftViewerCondition)
 		{
 			cout << "leftMedia" << endl;
 			runInCurrentPlayer(&leftViewer, res);
 		}
-		if ((x >= rightViewer.startX && y >= rightViewer.startY) && (x <= rightViewer.startX + rightViewer.maxWidth && y <= rightViewer.startY + rightViewer.maxHeight))
+		else if (rightViewerCondition)
 		{
 			cout << "rightMedia" << endl;
 			runInCurrentPlayer(&rightViewer, res);
@@ -199,8 +176,6 @@ void ofApp::mouseReleased(int x, int y, int button) {
 
 		choosedButtonNumber = -1;
 	}
-	//cout << "isMouseClicked = " << isMouseClicked << endl;
-
 }
 
 Component createFilterButton(ofApp* ofApp)

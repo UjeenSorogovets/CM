@@ -151,6 +151,53 @@ public:
 };
 
 
+class ApiUI
+{
+
+};
+
+static void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaType)
+{
+	float height;
+	float width;
+
+	if (mediaType == VIDEO)
+	{
+		height = mediaViewer->videoPlayer.getHeight();
+		width = mediaViewer->videoPlayer.getWidth();
+	}
+	else
+	{
+		height = mediaViewer->imagePlayer.getHeight();
+		width = mediaViewer->imagePlayer.getWidth();
+	}
+
+	auto maxHeight = mediaViewer->maxHeight;
+	auto maxWidth = mediaViewer->maxWidth;
+
+	if (width > height)
+	{
+		cout << "width>height" << endl;
+		mediaViewer->height = maxHeight / (width / height);
+		mediaViewer->width = maxWidth;
+
+		mediaViewer->y = mediaViewer->startY + (maxHeight - mediaViewer->height) / 2;
+		mediaViewer->x = mediaViewer->startX;
+	}
+	else
+	{
+		cout << "width<height" << endl;
+		mediaViewer->height = maxHeight;
+		mediaViewer->width = maxWidth * (width / height);
+
+		mediaViewer->y = mediaViewer->startY;
+		mediaViewer->x = mediaViewer->startX + (maxWidth - mediaViewer->width) / 2;
+	}
+
+	cout << "height/width = " << height << "/" << width << endl;
+}
+
+
 class ofApp : public ofBaseApp{
 
 public:
