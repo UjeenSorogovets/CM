@@ -198,6 +198,11 @@
     <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AdditionalTypes.h" />
+    <ClInclude Include="src\Component.h" />
+    <ClInclude Include="src\ComponentPanel.h" />
+    <ClInclude Include="src\MediaViewer.h" />
+    <ClInclude Include="src\MetaData.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGui2dPad.h" />
     <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiButton.h" />
@@ -515,6 +520,7 @@
     <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxOpenCv\libs\opencv\include\opencv2\world.hpp" />
     <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxXmlSettings\src\ofxXmlSettings.h" />
     <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxXmlSettings\libs\tinyxml.h" />
+    <ClInclude Include="src\UIdraw.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">

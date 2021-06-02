@@ -1,59 +1,8 @@
 #include "ofApp.h"
+#include "UIdraw.h"
 #include <string> 
 
-namespace fs = std::filesystem;
-fs::path baseXmlPath = fs::current_path() / "Xml";
-MediaViewer leftViewer;
-MediaViewer rightViewer;
 
-int x = 0;
-int y = 0;
-int p = 200;
-
-bool isMousePressed = false;
-
-ComponentPanel horizontalPanel;
-ComponentPanel verticalPanel;
-
-int catchMediaButton(int x, int y, ComponentPanel* componentPanel)
-{
-	int buttonNumber = -1;
-
-	for (int i = 1; i < componentPanel->components.size(); i++)
-	{
-		Component currentComponent = componentPanel->components[i];
-
-		if ((x >= currentComponent.currentPosX && y >= currentComponent.currentPosY) && (x <= currentComponent.currentPosX + currentComponent.width && y <= currentComponent.currentPosY + currentComponent.height))
-		{
-			cout << currentComponent.component->getLabel() << endl;
-
-			try {
-				int res = stoi(currentComponent.component->getLabel());
-				return res;
-			}
-			catch (std::invalid_argument e) {
-				//cout << "Caught Invalid Argument Exception from catchMediaButton \n";
-			}
-		}
-	}
-	if ((x >= componentPanel->startPosX && y >= componentPanel->startPosY) && (x <= componentPanel->startPosX + componentPanel->componentWidth && y <= componentPanel->startPosY + componentPanel->componentHeight))
-	{
-		return 0;
-	}
-	return buttonNumber;
-}
-
-ofImage helpImage;
-int helpImageX;
-int helpImageY;
-int helpImageWidth;
-int helpImageHeight;
-
-int choosedButtonNumber = -1;
-int offsetDragX = 0;
-int offsetDragY = 0;
-
-bool isMouseClicked = false;
 
 void ofApp::mouseDragged(int x, int y, int button) {
 	if (choosedButtonNumber == -1)
@@ -80,59 +29,7 @@ void ofApp::mouseDragged(int x, int y, int button) {
 	}
 }
 
-void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
-{
-	try {
-		auto mediaType = horizontalPanel.components[res].type;
-		if (mediaType == IMAGE)
-		{
-			cout << "IMAGE" << endl;
-			//stop video if get image
-			mediaViewer->videoPlayer.stop();
-			
-			mediaViewer->isImageNow = true;
-			auto img = horizontalPanel.components[res].image;
-			mediaViewer->imagePlayer = img;
-			
-			resizePlayerToMedia(mediaViewer, mediaType);
-		}
-		else if (mediaType == VIDEO)
-		{
-			cout << "VIDEO" << endl;
 
-			mediaViewer->isImageNow = false;
-			mediaViewer->videoPlayer.load(horizontalPanel.components[res].path);
-			mediaViewer->videoPlayer.play();
-
-			resizePlayerToMedia(mediaViewer, mediaType);
-		}
-		else
-		{
-			cout << "FILTER OR OTHER" << endl;
-		}
-	}
-	catch (std::invalid_argument e) {
-		cout << "Caught Invalid Argument Exception\n";
-	}
-}
-
-void playPausePlayer(MediaViewer* mediaViewer)
-{
-	if (!mediaViewer->isImageNow)
-	{
-		bool isPlaying = mediaViewer->videoPlayer.isPlaying();
-		cout << isPlaying << endl;
-		if (isPlaying)
-		{
-			mediaViewer->videoPlayer.setPaused(true);
-		}
-		else
-		{
-			mediaViewer->videoPlayer.play();
-			
-		}
-	}
-}
 
 void ofApp::mousePressed(int x, int y, int button) {
 	//cout << "mousePressed" << endl;
@@ -213,65 +110,6 @@ void ofApp::mouseReleased(int x, int y, int button) {
 	}
 }
 
-Component createFilterButton(ofApp* ofApp)
-{
-	Component component;
-	auto testLabel = "tag " + to_string(verticalPanel.components.size());
-	component.component = new ofxDatGuiButton(testLabel);
-	//component.component->setOpacity(0.0f);
-	component.path = testLabel;
-	component.type = FILTER;
-	//component.component->onButtonEvent(ofApp, &ofApp::onButtonEvent);
-
-	return component;
-}
-
-Component createMediaButton(ofApp* ofApp)
-{
-	Component component;
-	component.component = new ofxDatGuiButton("---");
-	component.component->setOpacity(0.0f);
-	component.component->onButtonEvent(ofApp, &ofApp::onButtonEvent);
-
-	ofImage image;
-
-	ofFileDialogResult result = ofSystemLoadDialog("Load file");
-	if (result.bSuccess)
-	{
-		string path = result.getPath();
-		ofVideoPlayer player;
-
-		cout << "play load:" << player.load(path) << endl;
-		if (image.load(path))
-		{
-			cout << "added image" << endl;
-			component.type = IMAGE;
-		}
-		else
-		{
-			if (player.load(path)) {
-				cout << "added video" << endl;
-				component.type = VIDEO;
-				player.play();
-				player.setPaused(true);
-				auto x = player.getPixels();
-				image.setFromPixels(x);
-			}
-			else
-			{
-				cout << "error open file" << endl;
-				component.type = UNKNOWN;
-			}
-		}
-		component.image = image;
-		component.path = path;
-		if (!component.fetchXml())
-		{
-			cout << "xml load error [" << component.metaData.xmlPath << "]" << endl;
-		}
-	}
-	return component;
-}
 
 void ofApp::setup()
 {
@@ -317,20 +155,6 @@ void ofApp::setup()
 	}
 	//rightViewer.imagePlayer.load("C:/Users/GAD/Desktop/image_2021-05-12_10-24-07.png");
 
-}
-
-void updateAll(Component component)
-{
-	component.component->update();
-}
-
-void updateAll(ComponentPanel componentPanel)
-{
-	for (int i = 0; i < componentPanel.components.size(); i++)
-	{
-		Component currentComponent = componentPanel.components[i];
-		updateAll(currentComponent);
-	}
 }
 
 void ofApp::update()
@@ -469,62 +293,3 @@ void ofApp::onTextInputEvent(ofxDatGuiTextInputEvent e)
 	cout << "onButtonEvent: " << e.text << endl;
 }
 
-bool Component::fetchXml()
-{
-	metaData.contentPath = path;
-	metaData.xmlPath = baseXmlPath / (metaData.contentPath.filename().replace_extension("xml"));
-
-	if (metaData.xmlRoot.load(metaData.xmlPath))
-	{
-		ofXml mainNode = metaData.xmlRoot.getChild("component");
-		//mainNode.appendChild("contentPath").set(metaData.contentPath.c_str());
-		string type = mainNode.getChild("type").getValue();
-		if (type == "IMAGE")
-		{
-			metaData.type = IMAGE;
-		}
-		else if (type == "VIDEO")
-		{
-			metaData.type = VIDEO;
-		}
-
-		ofXml sizeNode = mainNode.getChild("size");
-		metaData.size.x = sizeNode.getChild("w").getIntValue();
-		metaData.size.y = sizeNode.getChild("h").getIntValue();
-		return true;
-	}
-	else
-	{
-		metaData.type = type;
-		metaData.size = ofVec2f(image.getWidth(), image.getHeight());
-		////////
-		ofXml mainNode = metaData.xmlRoot.appendChild("component");
-		mainNode.appendChild("contentPath").set(metaData.contentPath);
-		ofXml typeNode = mainNode.appendChild("type");
-		switch (metaData.type)
-		{
-		case IMAGE:
-			typeNode.set("IMAGE");
-			break;
-		case VIDEO:
-			typeNode.set("VIDEO");
-			break;
-		default:
-			typeNode.set("UNKNOWN");
-			break;
-		}
-		ofXml sizeNode = mainNode.appendChild("size");
-		sizeNode.appendChild("w").set((int)metaData.size.x);
-		sizeNode.appendChild("h").set((int)metaData.size.y);
-		fs::create_directories(metaData.xmlPath.parent_path());
-		if (metaData.xmlRoot.save(metaData.xmlPath))
-		{
-			cout << "save xml to: [" << metaData.xmlPath << "]" << endl;
-		}
-		else
-		{
-			cout << "error save xml to: [" << metaData.xmlPath << "]" << endl;
-		}
-		return false;
-	}
-}
