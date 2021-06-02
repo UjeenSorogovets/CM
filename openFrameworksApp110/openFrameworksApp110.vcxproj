@@ -520,6 +520,7 @@
     <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxOpenCv\libs\opencv\include\opencv2\world.hpp" />
     <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxXmlSettings\src\ofxXmlSettings.h" />
     <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxXmlSettings\libs\tinyxml.h" />
+    <ClInclude Include="src\UIdraw.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">

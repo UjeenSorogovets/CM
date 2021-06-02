@@ -1205,6 +1205,9 @@
     <ClInclude Include="src\MediaViewer.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\UIdraw.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />

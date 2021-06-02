@@ -8,57 +8,31 @@
 
 namespace fs = std::filesystem;
 
-static void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaType)
-{
-	float height;
-	float width;
-
-	if (mediaType == VIDEO)
-	{
-		height = mediaViewer->videoPlayer.getHeight();
-		width = mediaViewer->videoPlayer.getWidth();
-	}
-	else
-	{
-		height = mediaViewer->imagePlayer.getHeight();
-		width = mediaViewer->imagePlayer.getWidth();
-	}
-
-	auto maxHeight = mediaViewer->maxHeight;
-	auto maxWidth = mediaViewer->maxWidth;
-
-	if (width > height)
-	{
-		cout << "width>height" << endl;
-		mediaViewer->height = maxHeight / (width / height);
-		mediaViewer->width = maxWidth;
-
-		mediaViewer->y = mediaViewer->startY + (maxHeight - mediaViewer->height) / 2;
-		mediaViewer->x = mediaViewer->startX;
-	}
-	else
-	{
-		cout << "width<height" << endl;
-		mediaViewer->height = maxHeight;
-		mediaViewer->width = maxWidth * (width / height);
-
-		mediaViewer->y = mediaViewer->startY;
-		mediaViewer->x = mediaViewer->startX + (maxWidth - mediaViewer->width) / 2;
-	}
-
-	cout << "height/width = " << height << "/" << width << endl;
-}
-
-static bool inViewerCondition(int x, int y, MediaViewer* mediaViewer)
-{
-	bool condition = (x >= mediaViewer->startX && y >= mediaViewer->startY) &&
-		(x <= mediaViewer->startX + mediaViewer->maxWidth && y <= mediaViewer->startY + mediaViewer->maxHeight);
-	return condition;
-}
-
 class ofApp : public ofBaseApp{
 
 public:
+
+	MediaViewer leftViewer;
+	MediaViewer rightViewer;
+
+	int x = 0;
+	int y = 0;
+	int p = 200;
+
+	bool isMousePressed = false;
+
+	ofImage helpImage;
+	int helpImageX;
+	int helpImageY;
+	int helpImageWidth;
+	int helpImageHeight;
+
+	int choosedButtonNumber = -1;
+	int offsetDragX = 0;
+	int offsetDragY = 0;
+
+	bool isMouseClicked = false;
+
 	void mouseReleased(int x, int y, int button);
 	void mousePressed(int x, int y, int button);
 	void mouseDragged(int x, int y, int button);
