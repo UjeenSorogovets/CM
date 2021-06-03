@@ -210,11 +210,6 @@ void drawAll(ComponentPanel componentPanel)
 
 void ofApp::draw()
 {
-<<<<<<< HEAD
-
-	//
-=======
->>>>>>> a89e5826f15b82dff98d02429a99fa51d01bdb2f
 	helpImage.draw(helpImageX, helpImageY, helpImageWidth, helpImageHeight);
 	
 	drawAll(horizontalPanel);
@@ -265,12 +260,13 @@ void ofApp::draw()
 	}
 
 
-	webCam.draw(1920, 1080, 50);
+	webCam.draw(globalWidth, globalHeight, 255);
 }
+
 
 void ofApp::onFilterClick(ofxDatGuiButtonEvent e)
 {
-	cout << "onFilterClick" <<e.target->getIndex() <<endl;
+	cout << "onFilterClick" << e.target->getIndex() << endl;
 }
 
 void ofApp::addFilterClick(ofxDatGuiButtonEvent e)
