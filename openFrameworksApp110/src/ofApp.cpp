@@ -106,20 +106,7 @@ void ofApp::mouseReleased(int x, int y, int button) {
 	}
 }
 
-void createAddMediaButton(int x,int y,int width,int height,ofApp* app, vector<ofxDatGuiComponent*> components)
-{
-	ofxDatGuiComponent* component;
-
-	component = new ofxDatGuiButton("+");
-	component->setPosition(x + 20, y + 20);
-	component->setWidth(width, 0.0f);
-	component->setHeight(height);
-	component->onButtonEvent(app, &ofApp::addMediaClick);
-	component->setOpacity(0.0f);
-	components.push_back(component);
-}
-
-//void createAddFilterButton(int x, int y, int width, int height, ofApp* app, vector<ofxDatGuiComponent*> components)
+//void createAddMediaButton(int x,int y,int width,int height,ofApp* app, vector<ofxDatGuiComponent*> components)
 //{
 //	ofxDatGuiComponent* component;
 //
@@ -132,8 +119,7 @@ void createAddMediaButton(int x,int y,int width,int height,ofApp* app, vector<of
 //	components.push_back(component);
 //}
 
-//int globalWidth = 1280;
-//int globalHeight = 1024;
+
 int globalWidth = 1366;
 int globalHeight = 768;
 //int globalWidth = 1920;
