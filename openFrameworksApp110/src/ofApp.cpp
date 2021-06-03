@@ -273,11 +273,18 @@ void ofApp::draw()
 void ofApp::onFilterClick(ofxDatGuiButtonEvent e)
 {
 	int currentIndex = e.target->getIndex();
+	FilterComponent currentComponent;
 	cout << "onFilterClick index = " << currentIndex <<endl;
 	for (int i = 0; i < verticalPanel.components.size(); i++)
 	{
-		auto xas = verticalPanel.components[i];
+		if (verticalPanel.components[i].index==currentIndex)
+		{
+			currentComponent = verticalPanel.components[i];
+		}
+		
 	}
+	cout << "size = " << currentComponent.components.size() << endl;
+	
 }
 
 void ofApp::addFilterClick(ofxDatGuiButtonEvent e)
@@ -292,6 +299,9 @@ void ofApp::addMediaClick(ofxDatGuiButtonEvent e)
 {
 	cout << "addMediaClick" << endl;
 	auto mediaButton = createMediaButton(this);
+	//
+	allComponents.push_back(mediaButton);
+	//
 	horizontalPanel.push(mediaButton);
 }
 

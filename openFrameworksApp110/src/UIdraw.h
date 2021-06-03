@@ -5,7 +5,7 @@
 #include "Component.h"
 #include "ComponentPanel.h"
 
-
+static vector<Component> allComponents;
 static ComponentPanel horizontalPanel;
 //static ComponentPanel verticalPanel;
 static FiltersPanel verticalPanel;
@@ -69,6 +69,10 @@ FilterComponent createFilterButton(ofApp* ofApp)
 	component.component->onButtonEvent(ofApp, &ofApp::onFilterClick);
 	component.width = 100;
 	component.index = component.component->getIndex();
+	//
+	Component c;
+	component.components.push_back(c);
+	//
 	return component;
 	/*Component component;
 	auto testLabel = "tag " + to_string(verticalPanel.components.size());
