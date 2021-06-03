@@ -65,10 +65,9 @@ Component createFilterButton(ofApp* ofApp)
 	Component component;
 	auto testLabel = "tag " + to_string(verticalPanel.components.size());
 	component.component = new ofxDatGuiButton(testLabel);
-	//component.component->setOpacity(0.0f);
 	component.path = testLabel;
 	component.type = FILTER;
-	//component.component->onButtonEvent(ofApp, &ofApp::onButtonEvent);
+	component.component->onButtonEvent(ofApp, &ofApp::onFilterClick);
 
 	return component;
 }
@@ -88,7 +87,7 @@ Component createMediaButton(ofApp* ofApp)
 		string path = result.getPath();
 		ofVideoPlayer player;
 
-		cout << "play load:" << player.load(path) << endl;
+		//cout << "play load:" << player.load(path) << endl;
 		if (image.load(path))
 		{
 			cout << "added image" << endl;
@@ -120,14 +119,13 @@ Component createMediaButton(ofApp* ofApp)
 	return component;
 }
 
-
 void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
 {
 	try {
 		auto mediaType = horizontalPanel.components[res].type;
 		if (mediaType == IMAGE)
 		{
-			cout << "IMAGE" << endl;
+			//cout << "IMAGE" << endl;
 			//stop video if get image
 			mediaViewer->videoPlayer.stop();
 
@@ -139,7 +137,7 @@ void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
 		}
 		else if (mediaType == VIDEO)
 		{
-			cout << "VIDEO" << endl;
+			//cout << "VIDEO" << endl;
 
 			mediaViewer->isImageNow = false;
 			mediaViewer->videoPlayer.load(horizontalPanel.components[res].path);
@@ -162,7 +160,7 @@ void playPausePlayer(MediaViewer* mediaViewer)
 	if (!mediaViewer->isImageNow)
 	{
 		bool isPlaying = mediaViewer->videoPlayer.isPlaying();
-		cout << isPlaying << endl;
+		//cout << isPlaying << endl;
 		if (isPlaying)
 		{
 			mediaViewer->videoPlayer.setPaused(true);
@@ -185,7 +183,7 @@ int catchMediaButton(int x, int y, ComponentPanel* componentPanel)
 
 		if ((x >= currentComponent.currentPosX && y >= currentComponent.currentPosY) && (x <= currentComponent.currentPosX + currentComponent.width && y <= currentComponent.currentPosY + currentComponent.height))
 		{
-			cout << currentComponent.component->getLabel() << endl;
+			//cout << currentComponent.component->getLabel() << endl;
 
 			try {
 				int res = stoi(currentComponent.component->getLabel());

@@ -2,8 +2,6 @@
 #include "UIdraw.h"
 #include <string> 
 
-
-
 void ofApp::mouseDragged(int x, int y, int button) {
 	if (choosedButtonNumber == -1)
 	{
@@ -29,8 +27,6 @@ void ofApp::mouseDragged(int x, int y, int button) {
 	}
 }
 
-
-
 void ofApp::mousePressed(int x, int y, int button) {
 	//cout << "mousePressed" << endl;
 	isMouseClicked = true;
@@ -47,7 +43,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 	if (inHorizontalPanelCondition)
 	{
 		choosedButtonNumber = catchMediaButton(x, y, &horizontalPanel);
-		cout << "choosedButtonNumber = " << choosedButtonNumber << endl;
+		//cout << "choosedButtonNumber = " << choosedButtonNumber << endl;
 	}
 	else if (leftViewerCondition)
 	{
@@ -61,7 +57,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 	}
 	else
 	{
-		cout << "mousePressed for nothing" << endl;
+		//cout << "mousePressed for nothing" << endl;
 	}
 }
 
@@ -69,7 +65,7 @@ void ofApp::mouseReleased(int x, int y, int button) {
 	isMouseClicked = false;
 	if (choosedButtonNumber != -1)
 	{
-		cout << "isMouseClicked = " << isMouseClicked << endl;
+		//cout << "isMouseClicked = " << isMouseClicked << endl;
 
 		helpImage.clear();
 
@@ -85,20 +81,20 @@ void ofApp::mouseReleased(int x, int y, int button) {
 
 		int x = mouseX;
 		int y = mouseY;
-		cout << x << endl;
-		cout << y << endl;
+		//cout << x << endl;
+		//cout << y << endl;
 
 		bool leftViewerCondition = inViewerCondition(x,y, &leftViewer);
 		bool rightViewerCondition = inViewerCondition(x, y, &rightViewer);
 
 		if (leftViewerCondition)
 		{
-			cout << "leftMedia" << endl;
+			//cout << "leftMedia" << endl;
 			runInCurrentPlayer(&leftViewer, res);
 		}
 		else if (rightViewerCondition)
 		{
-			cout << "rightMedia" << endl;
+			//cout << "rightMedia" << endl;
 			runInCurrentPlayer(&rightViewer, res);
 		}
 		else
@@ -110,14 +106,46 @@ void ofApp::mouseReleased(int x, int y, int button) {
 	}
 }
 
+void createAddMediaButton(int x,int y,int width,int height,ofApp* app, vector<ofxDatGuiComponent*> components)
+{
+	ofxDatGuiComponent* component;
 
+	component = new ofxDatGuiButton("+");
+	component->setPosition(x + 20, y + 20);
+	component->setWidth(width, 0.0f);
+	component->setHeight(height);
+	component->onButtonEvent(app, &ofApp::addMediaClick);
+	component->setOpacity(0.0f);
+	components.push_back(component);
+}
+
+//void createAddFilterButton(int x, int y, int width, int height, ofApp* app, vector<ofxDatGuiComponent*> components)
+//{
+//	ofxDatGuiComponent* component;
+//
+//	component = new ofxDatGuiButton("+");
+//	component->setPosition(x + 20, y + 20);
+//	component->setWidth(width, 0.0f);
+//	component->setHeight(height);
+//	component->onButtonEvent(app, &ofApp::addMediaClick);
+//	component->setOpacity(0.0f);
+//	components.push_back(component);
+//}
+
+//int globalWidth = 1280;
+//int globalHeight = 1024;
+int globalWidth = 1366;
+int globalHeight = 768;
+//int globalWidth = 1920;
+//int globalHeight = 1080;
 void ofApp::setup()
 {
 	ofSetWindowPosition(0, 0);
-	ofSetWindowShape(1920, 1080);
+	/*ofSetWindowShape(1920, 1080);*/
+	ofSetWindowShape(globalWidth, globalHeight);
 
 	ofxDatGuiComponent* component;
-
+	
 	component = new ofxDatGuiButton("+");
 	component->setPosition(x + 20, y + 20);
 	component->setWidth(100, 0.0f);
@@ -138,9 +166,11 @@ void ofApp::setup()
 	horizontalPanel.startPosY = 30;
 	horizontalPanel.offsetX = 20;
 	horizontalPanel.offsetY = 0;
-
-	leftViewer = MediaViewer(250, 180, 800, 800);
-	rightViewer = MediaViewer(1050, 180, 800, 800);
+	//
+	int widthDif = 1920 - globalWidth;
+	int heightDif = 1080 - globalHeight;
+	leftViewer = MediaViewer(250, 180, 800-(widthDif/2), 800- (heightDif/1.25));
+	rightViewer = MediaViewer(1050- (widthDif / 2), 180, 800- (widthDif / 2), 800 - (heightDif/1.25));
 
 	verticalPanel.startPosX = 60;
 	verticalPanel.startPosY = 150;
@@ -169,7 +199,7 @@ void ofApp::update()
 
 	rightViewer.imagePlayer.update();
 	rightViewer.videoPlayer.update();
-	//
+	
 	helpImage.update();
 }
 
@@ -190,9 +220,8 @@ void drawAll(ComponentPanel componentPanel)
 
 void ofApp::draw()
 {
-	//
 	helpImage.draw(helpImageX, helpImageY, helpImageWidth, helpImageHeight);
-	//
+	
 	drawAll(horizontalPanel);
 	drawAll(verticalPanel);
 
@@ -238,6 +267,11 @@ void ofApp::draw()
 		ofSetLineWidth(4.5); // A higher value will render thicker lines
 		ofDrawRectangle(rightViewer.startX, rightViewer.startY, rightViewer.maxWidth, rightViewer.maxHeight);
 	}
+}
+
+void ofApp::onFilterClick(ofxDatGuiButtonEvent e)
+{
+	cout << "onFilterClick" <<e.target->getIndex() <<endl;
 }
 
 void ofApp::addFilterClick(ofxDatGuiButtonEvent e)
