@@ -7,7 +7,8 @@
 
 
 static ComponentPanel horizontalPanel;
-static ComponentPanel verticalPanel;
+//static ComponentPanel verticalPanel;
+static FiltersPanel verticalPanel;
 
 
 void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaType)
@@ -58,16 +59,26 @@ bool inViewerCondition(int x, int y, MediaViewer* mediaViewer)
 	return condition;
 }
 
-Component createFilterButton(ofApp* ofApp)
+FilterComponent createFilterButton(ofApp* ofApp)
 {
-	Component component;
+	FilterComponent component;
 	auto testLabel = "tag " + to_string(verticalPanel.components.size());
 	component.component = new ofxDatGuiButton(testLabel);
 	component.path = testLabel;
 	component.type = FILTER;
 	component.component->onButtonEvent(ofApp, &ofApp::onFilterClick);
-
+	component.width = 100;
+	component.index = component.component->getIndex();
 	return component;
+	/*Component component;
+	auto testLabel = "tag " + to_string(verticalPanel.components.size());
+	component.component = new ofxDatGuiButton(testLabel);
+	component.path = testLabel;
+	component.type = FILTER;
+	component.component->onButtonEvent(ofApp, &ofApp::onFilterClick);
+	component.width = 100;
+
+	return component;*/
 }
 
 Component createMediaButton(ofApp* ofApp)
@@ -209,6 +220,20 @@ void updateAll(ComponentPanel componentPanel)
 	for (int i = 0; i < componentPanel.components.size(); i++)
 	{
 		Component currentComponent = componentPanel.components[i];
+		updateAll(currentComponent);
+	}
+}
+
+void updateAll(FilterComponent component)
+{
+	component.component->update();
+}
+
+void updateAll(FiltersPanel componentPanel)
+{
+	for (int i = 0; i < componentPanel.components.size(); i++)
+	{
+		FilterComponent currentComponent = componentPanel.components[i];
 		updateAll(currentComponent);
 	}
 }

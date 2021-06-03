@@ -65,8 +65,6 @@ void ofApp::mouseReleased(int x, int y, int button) {
 	isMouseClicked = false;
 	if (choosedButtonNumber != -1)
 	{
-		//cout << "isMouseClicked = " << isMouseClicked << endl;
-
 		helpImage.clear();
 
 		for (int i = 0; i < horizontalPanel.components.size(); i++)
@@ -170,6 +168,7 @@ void ofApp::setup()
 		auto x = createFilterButton(this);
 		verticalPanel.push(x);
 	}
+	
 	//rightViewer.imagePlayer.load("C:/Users/GAD/Desktop/image_2021-05-12_10-24-07.png");
 
 }
@@ -201,6 +200,21 @@ void drawAll(ComponentPanel componentPanel)
 	for (int i = 0; i < componentPanel.components.size(); i++)
 	{
 		Component currentComponent = componentPanel.components[i];
+		drawAll(currentComponent);
+	}
+}
+
+void drawAll(FilterComponent component)
+{
+	component.component->draw();
+	component.image.draw(component.currentPosX, component.currentPosY, component.width, component.height);
+}
+
+void drawAll(FiltersPanel componentPanel)
+{
+	for (int i = 0; i < componentPanel.components.size(); i++)
+	{
+		FilterComponent currentComponent = componentPanel.components[i];
 		drawAll(currentComponent);
 	}
 }
@@ -258,7 +272,12 @@ void ofApp::draw()
 
 void ofApp::onFilterClick(ofxDatGuiButtonEvent e)
 {
-	cout << "onFilterClick" <<e.target->getIndex() <<endl;
+	int currentIndex = e.target->getIndex();
+	cout << "onFilterClick index = " << currentIndex <<endl;
+	for (int i = 0; i < verticalPanel.components.size(); i++)
+	{
+		auto xas = verticalPanel.components[i];
+	}
 }
 
 void ofApp::addFilterClick(ofxDatGuiButtonEvent e)

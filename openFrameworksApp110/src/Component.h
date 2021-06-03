@@ -14,6 +14,8 @@ public:
 	ofxDatGuiComponent* component;
 	ofImage image;
 
+	int index;
+
 	int startPosX;
 	int startPosY;
 
@@ -89,4 +91,10 @@ public:
 			return false;
 		}
 	}
+};
+
+class FilterComponent : public Component
+{
+public:
+	vector<Component> components;
 };
