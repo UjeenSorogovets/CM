@@ -138,10 +138,12 @@ int globalWidth = 1366;
 int globalHeight = 768;
 //int globalWidth = 1920;
 //int globalHeight = 1080;
+int widthDif = 1920 - globalWidth;
+int heightDif = 1080 - globalHeight;
+
 void ofApp::setup()
 {
 	ofSetWindowPosition(0, 0);
-	/*ofSetWindowShape(1920, 1080);*/
 	ofSetWindowShape(globalWidth, globalHeight);
 
 	ofxDatGuiComponent* component;
@@ -167,15 +169,14 @@ void ofApp::setup()
 	horizontalPanel.offsetX = 20;
 	horizontalPanel.offsetY = 0;
 	//
-	int widthDif = 1920 - globalWidth;
-	int heightDif = 1080 - globalHeight;
+	
 	leftViewer = MediaViewer(250, 180, 800-(widthDif/2), 800- (heightDif/1.25));
 	rightViewer = MediaViewer(1050- (widthDif / 2), 180, 800- (widthDif / 2), 800 - (heightDif/1.25));
 
 	verticalPanel.startPosX = 60;
 	verticalPanel.startPosY = 150;
 	verticalPanel.offsetX = 0;
-	verticalPanel.offsetY = 20;
+	verticalPanel.offsetY = 10;
 	verticalPanel.horizontal = false;
 
 	for (int i = 0; i < 4; i++)
@@ -247,15 +248,15 @@ void ofApp::draw()
 
 	ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
 	ofSetLineWidth(4.5); // A higher value will render thicker lines
-	ofDrawRectangle(20, 20, 1880, 1000);
+	ofDrawRectangle(20, 20, 1880-(widthDif), 1000 - (heightDif / 1.15));
 
 	ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
 	ofSetLineWidth(4.5); // A higher value will render thicker lines
-	ofDrawRectangle(20, 20, 1880, 120);
+	ofDrawRectangle(20, 20, 1880 - (widthDif), 120);
 
 	ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
 	ofSetLineWidth(4.5); // A higher value will render thicker lines
-	ofDrawRectangle(20, 20, 200, 1000);
+	ofDrawRectangle(20, 20, 200, 1000-(heightDif/1.15));
 
 	if (isMousePressed)
 	{
