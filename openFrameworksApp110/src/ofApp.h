@@ -43,6 +43,8 @@ public:
 	void update();
 	void draw();
 
+	void onFilterClick(ofxDatGuiButtonEvent e);
+
 	void addFilterClick(ofxDatGuiButtonEvent e);
 
 	void addMediaClick(ofxDatGuiButtonEvent e);
