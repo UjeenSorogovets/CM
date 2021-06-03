@@ -155,6 +155,7 @@ void ofApp::setup()
 	}
 	//rightViewer.imagePlayer.load("C:/Users/GAD/Desktop/image_2021-05-12_10-24-07.png");
 
+	webCam.initialize();
 }
 
 void ofApp::update()
@@ -171,6 +172,8 @@ void ofApp::update()
 	rightViewer.videoPlayer.update();
 	//
 	helpImage.update();
+
+	webCam.update();
 }
 
 void drawAll(Component component)
@@ -190,6 +193,7 @@ void drawAll(ComponentPanel componentPanel)
 
 void ofApp::draw()
 {
+
 	//
 	helpImage.draw(helpImageX, helpImageY, helpImageWidth, helpImageHeight);
 	//
@@ -228,6 +232,7 @@ void ofApp::draw()
 	ofSetLineWidth(4.5); // A higher value will render thicker lines
 	ofDrawRectangle(20, 20, 200, 1000);
 
+
 	if (isMousePressed)
 	{
 		ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
@@ -238,6 +243,9 @@ void ofApp::draw()
 		ofSetLineWidth(4.5); // A higher value will render thicker lines
 		ofDrawRectangle(rightViewer.startX, rightViewer.startY, rightViewer.maxWidth, rightViewer.maxHeight);
 	}
+
+
+	webCam.draw(1920, 1080, 50);
 }
 
 void ofApp::addFilterClick(ofxDatGuiButtonEvent e)

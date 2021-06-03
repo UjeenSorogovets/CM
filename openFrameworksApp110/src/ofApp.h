@@ -5,6 +5,7 @@
 #include "MediaViewer.h"
 #include "Component.h"
 #include "ComponentPanel.h"
+#include "WebCamGrabber.h"
 
 namespace fs = std::filesystem;
 
@@ -20,6 +21,8 @@ public:
 	int p = 200;
 
 	bool isMousePressed = false;
+
+	WebCamGrabber webCam;
 
 	ofImage helpImage;
 	int helpImageX;

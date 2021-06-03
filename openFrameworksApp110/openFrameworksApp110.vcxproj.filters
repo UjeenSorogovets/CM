@@ -1208,6 +1208,9 @@
     <ClInclude Include="src\UIdraw.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\WebCamGrabber.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
