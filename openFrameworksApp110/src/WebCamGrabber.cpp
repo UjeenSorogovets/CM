@@ -1,5 +1,5 @@
 #include "WebCamGrabber.h"
-#include <opencv2/ximgproc.hpp>
+#include "opencv2/ximgproc.hpp"
 
 bool WebCamGrabber::initialize()
 {
