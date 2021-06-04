@@ -211,6 +211,7 @@ void ofApp::setup()
 	
 	//rightViewer.imagePlayer.load("C:/Users/GAD/Desktop/image_2021-05-12_10-24-07.png");
 
+	webCam.initialize();
 }
 
 void updateAll(MediaViewer* mediaViewer)
@@ -230,6 +231,8 @@ void ofApp::update()
 	updateAll(&rightViewer);
 	
 	helpImage.update();
+
+	webCam.update();
 }
 
 void drawAll(InfoPanel panel)
@@ -306,13 +309,18 @@ void ofApp::draw()
 
 	ofDrawRectangle(20, 20, 200, 1000-(heightDif/1.15));
 
+
 	if (isMousePressed)
 	{
 		ofDrawRectangle(leftViewer.startX, leftViewer.startY, leftViewer.maxWidth, leftViewer.maxHeight);
 
 		ofDrawRectangle(rightViewer.startX, rightViewer.startY, rightViewer.maxWidth, rightViewer.maxHeight);
 	}
+
+
+	webCam.draw(globalWidth, globalHeight, 100);
 }
+
 
 void ofApp::onFilterClick(ofxDatGuiButtonEvent e)
 {

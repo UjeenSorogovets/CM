@@ -13,15 +13,6 @@
     <ClCompile Include="src\ofApp.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\core\ofxDatGuiComponent.cpp">
-      <Filter>addons\ofxDatGuiAddon\src\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\libs\ofxSmartFont\ofxSmartFont.cpp">
-      <Filter>addons\ofxDatGuiAddon\src\libs\ofxSmartFont</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\ofxDatGui.cpp">
-      <Filter>addons\ofxDatGuiAddon\src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxOpenCv\src\ofxCvColorImage.cpp">
       <Filter>addons\ofxOpenCv\src</Filter>
     </ClCompile>
@@ -43,6 +34,54 @@
     <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxOpenCv\src\ofxCvShortImage.cpp">
       <Filter>addons\ofxOpenCv\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\CLD\src\ETF.cpp">
+      <Filter>addons\ofxCv\libs\CLD\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\CLD\src\fdog.cpp">
+      <Filter>addons\ofxCv\libs\CLD\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\src\Calibration.cpp">
+      <Filter>addons\ofxCv\libs\ofxCv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\src\ContourFinder.cpp">
+      <Filter>addons\ofxCv\libs\ofxCv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\src\Distance.cpp">
+      <Filter>addons\ofxCv\libs\ofxCv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\src\Flow.cpp">
+      <Filter>addons\ofxCv\libs\ofxCv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\src\Helpers.cpp">
+      <Filter>addons\ofxCv\libs\ofxCv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\src\Kalman.cpp">
+      <Filter>addons\ofxCv\libs\ofxCv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\src\ObjectFinder.cpp">
+      <Filter>addons\ofxCv\libs\ofxCv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\src\RunningBackground.cpp">
+      <Filter>addons\ofxCv\libs\ofxCv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\src\Tracker.cpp">
+      <Filter>addons\ofxCv\libs\ofxCv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\src\Utilities.cpp">
+      <Filter>addons\ofxCv\libs\ofxCv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\src\Wrappers.cpp">
+      <Filter>addons\ofxCv\libs\ofxCv\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\core\ofxDatGuiComponent.cpp">
+      <Filter>addons\ofxDatGuiAddon\src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\libs\ofxSmartFont\ofxSmartFont.cpp">
+      <Filter>addons\ofxDatGuiAddon\src\libs\ofxSmartFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\ofxDatGui.cpp">
+      <Filter>addons\ofxDatGuiAddon\src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxXmlSettings\src\ofxXmlSettings.cpp">
       <Filter>addons\ofxXmlSettings\src</Filter>
     </ClCompile>
@@ -55,6 +94,18 @@
     <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxXmlSettings\libs\tinyxmlparser.cpp">
       <Filter>addons\ofxXmlSettings\libs</Filter>
     </ClCompile>
+    <ClCompile Include="src\Component .cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ComponentPanel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UIdraw .cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WebCamGrabber.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -62,27 +113,6 @@
     </Filter>
     <Filter Include="addons">
       <UniqueIdentifier>{71834F65-F3A9-211E-73B8-DC85}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxDatGuiAddon">
-      <UniqueIdentifier>{C62DDF1F-C624-A446-5366-1ECF}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxDatGuiAddon\src">
-      <UniqueIdentifier>{C50F3C05-5049-4402-5745-C3FC}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxDatGuiAddon\src\components">
-      <UniqueIdentifier>{33DC6376-BFE1-9583-BD96-0236}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxDatGuiAddon\src\core">
-      <UniqueIdentifier>{0C087836-EB26-3880-6151-67A7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxDatGuiAddon\src\libs">
-      <UniqueIdentifier>{946569B5-830D-9B18-6906-ED3D}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxDatGuiAddon\src\libs\ofxSmartFont">
-      <UniqueIdentifier>{B34C212C-9919-49E2-DE92-C5F1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxDatGuiAddon\src\themes">
-      <UniqueIdentifier>{1A889AB6-0B57-11A0-97C3-6573}</UniqueIdentifier>
     </Filter>
     <Filter Include="addons\ofxOpenCv">
       <UniqueIdentifier>{FFA81411-43B9-BD99-75AF-1DC3}</UniqueIdentifier>
@@ -225,6 +255,60 @@
     <Filter Include="addons\ofxOpenCv\libs\opencv\include\opencv2\videoio\legacy">
       <UniqueIdentifier>{01B554B2-7143-F97F-EB04-9763}</UniqueIdentifier>
     </Filter>
+    <Filter Include="addons\ofxCv">
+      <UniqueIdentifier>{A9C1150B-C1CB-2BC0-0F32-ED3B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCv\src">
+      <UniqueIdentifier>{6B661273-844D-D754-F98D-C3B1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCv\libs">
+      <UniqueIdentifier>{2D63E874-134A-C540-1157-C931}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCv\libs\CLD">
+      <UniqueIdentifier>{6E254616-00D9-D1AD-2976-B475}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCv\libs\CLD\include">
+      <UniqueIdentifier>{127D6EBD-127A-D8C0-AE83-D8F2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCv\libs\CLD\include\CLD">
+      <UniqueIdentifier>{8B905DF6-4298-B52E-6BAD-BD9B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCv\libs\CLD\src">
+      <UniqueIdentifier>{988C5DE1-0A28-4035-7625-48D9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCv\libs\ofxCv">
+      <UniqueIdentifier>{9104DB86-FB76-46B8-7315-E1A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCv\libs\ofxCv\include">
+      <UniqueIdentifier>{80CEBD8F-DC90-1D69-BBF7-093D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCv\libs\ofxCv\include\ofxCv">
+      <UniqueIdentifier>{76E26063-B359-0A22-CC92-6F5B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCv\libs\ofxCv\src">
+      <UniqueIdentifier>{D4F40DFE-7BFE-9E37-3B94-006C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxDatGuiAddon">
+      <UniqueIdentifier>{C62DDF1F-C624-A446-5366-1ECF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxDatGuiAddon\src">
+      <UniqueIdentifier>{C50F3C05-5049-4402-5745-C3FC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxDatGuiAddon\src\components">
+      <UniqueIdentifier>{33DC6376-BFE1-9583-BD96-0236}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxDatGuiAddon\src\core">
+      <UniqueIdentifier>{0C087836-EB26-3880-6151-67A7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxDatGuiAddon\src\libs">
+      <UniqueIdentifier>{946569B5-830D-9B18-6906-ED3D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxDatGuiAddon\src\libs\ofxSmartFont">
+      <UniqueIdentifier>{B34C212C-9919-49E2-DE92-C5F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxDatGuiAddon\src\themes">
+      <UniqueIdentifier>{1A889AB6-0B57-11A0-97C3-6573}</UniqueIdentifier>
+    </Filter>
     <Filter Include="addons\ofxXmlSettings">
       <UniqueIdentifier>{877F005D-13E6-0592-1D97-F2E3}</UniqueIdentifier>
     </Filter>
@@ -234,76 +318,34 @@
     <Filter Include="addons\ofxXmlSettings\libs">
       <UniqueIdentifier>{687714A8-1662-FA1C-261F-50F0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{d6fdd945-5fcd-4468-9d4d-61ad8764a524}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\AdditionalTypes.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Component.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ComponentPanel.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MediaViewer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MetaData.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\ofApp.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGui2dPad.h">
-      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiButton.h">
-      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiColorPicker.h">
-      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiControls.h">
-      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiFRM.h">
-      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiGroups.h">
-      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiLabel.h">
-      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiMatrix.h">
-      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiScrollView.h">
-      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiSlider.h">
-      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiTextInput.h">
-      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiTextInputField.h">
-      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiTimeGraph.h">
-      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\core\ofxDatGuiComponent.h">
-      <Filter>addons\ofxDatGuiAddon\src\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\core\ofxDatGuiConstants.h">
-      <Filter>addons\ofxDatGuiAddon\src\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\core\ofxDatGuiEvents.h">
-      <Filter>addons\ofxDatGuiAddon\src\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\core\ofxDatGuiIntObject.h">
-      <Filter>addons\ofxDatGuiAddon\src\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\libs\ofxSmartFont\ofxSmartFont.h">
-      <Filter>addons\ofxDatGuiAddon\src\libs\ofxSmartFont</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\ofxDatGui.h">
-      <Filter>addons\ofxDatGuiAddon\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\themes\ofxDatGuiTheme.h">
-      <Filter>addons\ofxDatGuiAddon\src\themes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\themes\ofxDatGuiThemes.h">
-      <Filter>addons\ofxDatGuiAddon\src\themes</Filter>
+    <ClInclude Include="src\WebCamGrabber.h">
+      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxOpenCv\src\ofxCvBlob.h">
       <Filter>addons\ofxOpenCv\src</Filter>
@@ -1184,26 +1226,122 @@
     <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxOpenCv\libs\opencv\include\opencv2\world.hpp">
       <Filter>addons\ofxOpenCv\libs\opencv\include\opencv2</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\src\ofxCv.h">
+      <Filter>addons\ofxCv\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\CLD\include\CLD\ETF.h">
+      <Filter>addons\ofxCv\libs\CLD\include\CLD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\CLD\include\CLD\fdog.h">
+      <Filter>addons\ofxCv\libs\CLD\include\CLD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\CLD\include\CLD\imatrix.h">
+      <Filter>addons\ofxCv\libs\CLD\include\CLD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\CLD\include\CLD\myvec.h">
+      <Filter>addons\ofxCv\libs\CLD\include\CLD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Calibration.h">
+      <Filter>addons\ofxCv\libs\ofxCv\include\ofxCv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\ContourFinder.h">
+      <Filter>addons\ofxCv\libs\ofxCv\include\ofxCv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Distance.h">
+      <Filter>addons\ofxCv\libs\ofxCv\include\ofxCv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Flow.h">
+      <Filter>addons\ofxCv\libs\ofxCv\include\ofxCv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Helpers.h">
+      <Filter>addons\ofxCv\libs\ofxCv\include\ofxCv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Kalman.h">
+      <Filter>addons\ofxCv\libs\ofxCv\include\ofxCv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\ObjectFinder.h">
+      <Filter>addons\ofxCv\libs\ofxCv\include\ofxCv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\RunningBackground.h">
+      <Filter>addons\ofxCv\libs\ofxCv\include\ofxCv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Tracker.h">
+      <Filter>addons\ofxCv\libs\ofxCv\include\ofxCv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Utilities.h">
+      <Filter>addons\ofxCv\libs\ofxCv\include\ofxCv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Wrappers.h">
+      <Filter>addons\ofxCv\libs\ofxCv\include\ofxCv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGui2dPad.h">
+      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiButton.h">
+      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiColorPicker.h">
+      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiControls.h">
+      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiFRM.h">
+      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiGroups.h">
+      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiLabel.h">
+      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiMatrix.h">
+      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiScrollView.h">
+      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiSlider.h">
+      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiTextInput.h">
+      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiTextInputField.h">
+      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\components\ofxDatGuiTimeGraph.h">
+      <Filter>addons\ofxDatGuiAddon\src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\core\ofxDatGuiComponent.h">
+      <Filter>addons\ofxDatGuiAddon\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\core\ofxDatGuiConstants.h">
+      <Filter>addons\ofxDatGuiAddon\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\core\ofxDatGuiEvents.h">
+      <Filter>addons\ofxDatGuiAddon\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\core\ofxDatGuiIntObject.h">
+      <Filter>addons\ofxDatGuiAddon\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\libs\ofxSmartFont\ofxSmartFont.h">
+      <Filter>addons\ofxDatGuiAddon\src\libs\ofxSmartFont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\ofxDatGui.h">
+      <Filter>addons\ofxDatGuiAddon\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\themes\ofxDatGuiTheme.h">
+      <Filter>addons\ofxDatGuiAddon\src\themes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxDatGuiAddon\src\themes\ofxDatGuiThemes.h">
+      <Filter>addons\ofxDatGuiAddon\src\themes</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxXmlSettings\src\ofxXmlSettings.h">
       <Filter>addons\ofxXmlSettings\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxXmlSettings\libs\tinyxml.h">
       <Filter>addons\ofxXmlSettings\libs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Component.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MetaData.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ComponentPanel.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AdditionalTypes.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MediaViewer.h">
-      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\UIdraw.h">
       <Filter>src</Filter>

@@ -1,3 +1,4 @@
-ofxDatGuiAddon
 ofxOpenCv
+ofxCv
+ofxDatGuiAddon
 ofxXmlSettings
