@@ -105,26 +105,52 @@ void ofApp::mouseReleased(int x, int y, int button) {
 	}
 }
 
-//void createAddMediaButton(int x,int y,int width,int height,ofApp* app, vector<ofxDatGuiComponent*> components)
-//{
-//	ofxDatGuiComponent* component;
-//
-//	component = new ofxDatGuiButton("+");
-//	component->setPosition(x + 20, y + 20);
-//	component->setWidth(width, 0.0f);
-//	component->setHeight(height);
-//	component->onButtonEvent(app, &ofApp::addMediaClick);
-//	component->setOpacity(0.0f);
-//	components.push_back(component);
-//}
-
-
 int globalWidth = 1366;
 int globalHeight = 768;
 //int globalWidth = 1920;
 //int globalHeight = 1080;
 int widthDif = 1920 - globalWidth;
 int heightDif = 1080 - globalHeight;
+
+vector<Component> onlyImages(vector<Component>& components)
+{
+	for (int i = 0; i < components.size(); i++)
+	{
+		if (components[i].type != IMAGE)
+		{
+			components.erase(components.begin() + i);
+			i--;
+		}
+	}
+
+	return components;
+}
+
+vector<Component> onlyVideo(vector<Component>& components)
+{
+	cout << "only video!!!" << endl;
+	for (int i = 0; i < components.size(); i++)
+	{
+		if (components[i].type != VIDEO)
+		{
+			components.erase(components.begin() + i);
+			i--;
+		}
+	}
+
+	return components;
+}
+
+vector<Component> onlyFirstComponent(vector<Component>& components)
+{
+	for (int i = 1; i < components.size(); i++)
+	{
+			components.erase(components.begin() + i);
+			i--;
+	}
+
+	return components;
+}
 
 void ofApp::setup()
 {
@@ -164,11 +190,17 @@ void ofApp::setup()
 	verticalPanel.offsetY = 10;
 	verticalPanel.horizontal = false;
 
-	for (int i = 0; i < 4; i++)
+	/*for (int i = 0; i < 4; i++)
 	{
 		auto x = createFilterButton(this, "Default");
 		verticalPanel.push(x);
-	}
+	}*/
+
+	verticalPanel.push(createFilterButton(this, "Default"));
+	verticalPanel.push(createFilterButton(this, "Only Image", onlyImages));
+	verticalPanel.push(createFilterButton(this, "Only Video", onlyVideo));
+	verticalPanel.push(createFilterButton(this, "Only First", onlyFirstComponent));
+
 
 	auto currentPath = fs::current_path().string()+"\\src\\videos\\" ;
 
@@ -283,24 +315,20 @@ void ofApp::onFilterClick(ofxDatGuiButtonEvent e)
 			currentComponent = verticalPanel.components[i];
 		}
 	}
-	cout << "size = " << currentComponent.components.size() << endl;
-	//
-	int count = horizontalPanel.components.size() - 1;
+
+	auto newComponents = allComponents;
+
+	newComponents = currentComponent.filterFunc(newComponents);
+
+	int count = newComponents.size();
+	cout << "newComponents size = " << count << endl;
 	horizontalPanel.components.clear();
 	for (int i = 0; i < count; i++)
 	{
-		horizontalPanel.push(allComponents[i]);
+		horizontalPanel.push(newComponents[i]);
 	}
 	//
 }
-
-//void ofApp::addFilterClick(ofxDatGuiButtonEvent e)
-//{
-//	cout << "addFilterClick" << endl;
-//	auto x = createFilterButton(this);
-//
-//	verticalPanel.push(x);
-//}
 
 void ofApp::addMediaClickByPath(string path = "")
 {

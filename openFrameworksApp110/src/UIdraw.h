@@ -71,7 +71,23 @@ FilterComponent createFilterButton(ofApp* ofApp,string label)
 	component.index = component.component->getIndex();
 
 	return component;
+	//
+}
 
+FilterComponent createFilterButton(ofApp* ofApp, string label, std::function<vector<Component>(vector<Component>)> filterFunc)
+{
+	FilterComponent component;
+
+	component.component = new ofxDatGuiButton(label);
+	component.path = label;
+	component.type = FILTER;
+	component.component->onButtonEvent(ofApp, &ofApp::onFilterClick);
+	component.width = 100;
+	component.index = component.component->getIndex();
+	component.filterFunc = filterFunc;
+
+	return component;
+	//std::function<void(vector<Component>)> filterFunc
 }
 
 Component createMediaButton(ofApp* ofApp, string defaultPath="")
