@@ -218,7 +218,6 @@ void playPausePlayer(MediaViewer* mediaViewer)
 	if (!mediaViewer->isImageNow)
 	{
 		bool isPlaying = mediaViewer->videoPlayer.isPlaying();
-		//cout << isPlaying << endl;
 		if (isPlaying)
 		{
 			mediaViewer->videoPlayer.setPaused(true);
@@ -226,7 +225,6 @@ void playPausePlayer(MediaViewer* mediaViewer)
 		else
 		{
 			mediaViewer->videoPlayer.play();
-
 		}
 	}
 }
