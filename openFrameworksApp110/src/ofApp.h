@@ -49,6 +49,8 @@ public:
 	ofxDatGuiValuePlotter* plotter;
 	vector<ofxDatGuiComponent*> components;
 
+	void addMediaClickByPath(string path);
+
 	void onButtonEvent(ofxDatGuiButtonEvent e);
 	void onToggleEvent(ofxDatGuiToggleEvent e);
 	void onSliderEvent(ofxDatGuiSliderEvent e);

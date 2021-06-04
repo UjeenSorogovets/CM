@@ -1,6 +1,7 @@
 #include "ofApp.h"
 #include "UIdraw.h"
 #include <string> 
+#include <filesystem>
 
 void ofApp::mouseDragged(int x, int y, int button) {
 	if (choosedButtonNumber == -1)
@@ -140,13 +141,13 @@ void ofApp::setup()
 	component->setOpacity(0.0f);
 	components.push_back(component);
 
-	component = new ofxDatGuiButton("+");
+	/*component = new ofxDatGuiButton("+");
 	component->setPosition(x + 20, 800);
 	component->setWidth(100, 0.0f);
 	component->setHeight(100);
 	component->onButtonEvent(this, &ofApp::addFilterClick);
 	component->setOpacity(0.0f);
-	components.push_back(component);
+	components.push_back(component);*/
 	//
 	horizontalPanel.startPosX = 250;
 	horizontalPanel.startPosY = 30;
@@ -165,9 +166,17 @@ void ofApp::setup()
 
 	for (int i = 0; i < 4; i++)
 	{
-		auto x = createFilterButton(this);
+		auto x = createFilterButton(this, "Default");
 		verticalPanel.push(x);
 	}
+
+	auto currentPath = fs::current_path().string()+"\\src\\videos\\" ;
+
+	addMediaClickByPath(currentPath + "clip.mp4");
+	addMediaClickByPath(currentPath + "video1.mp4");
+	addMediaClickByPath(currentPath + "video2.mp4");
+	addMediaClickByPath(currentPath + "img1.png");
+	addMediaClickByPath(currentPath + "img2.jpg");
 	
 	//rightViewer.imagePlayer.load("C:/Users/GAD/Desktop/image_2021-05-12_10-24-07.png");
 
@@ -248,24 +257,17 @@ void ofApp::draw()
 
 	ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
 	ofSetLineWidth(4.5); // A higher value will render thicker lines
-	ofDrawRectangle(20, 20, 1880-(widthDif), 1000 - (heightDif / 1.15));
 
-	ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
-	ofSetLineWidth(4.5); // A higher value will render thicker lines
+	ofDrawRectangle(20, 20, 1880-(widthDif), 1000 - (heightDif / 1.15));
+	
 	ofDrawRectangle(20, 20, 1880 - (widthDif), 120);
 
-	ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
-	ofSetLineWidth(4.5); // A higher value will render thicker lines
 	ofDrawRectangle(20, 20, 200, 1000-(heightDif/1.15));
 
 	if (isMousePressed)
 	{
-		ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
-		ofSetLineWidth(4.5); // A higher value will render thicker lines
 		ofDrawRectangle(leftViewer.startX, leftViewer.startY, leftViewer.maxWidth, leftViewer.maxHeight);
 
-		ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
-		ofSetLineWidth(4.5); // A higher value will render thicker lines
 		ofDrawRectangle(rightViewer.startX, rightViewer.startY, rightViewer.maxWidth, rightViewer.maxHeight);
 	}
 }
@@ -281,23 +283,38 @@ void ofApp::onFilterClick(ofxDatGuiButtonEvent e)
 		{
 			currentComponent = verticalPanel.components[i];
 		}
-		
 	}
 	cout << "size = " << currentComponent.components.size() << endl;
-	
+	//
+	int count = horizontalPanel.components.size() - 1;
+	horizontalPanel.components.clear();
+	for (int i = 0; i < count; i++)
+	{
+		horizontalPanel.push(allComponents[i]);
+	}
+	//
 }
 
-void ofApp::addFilterClick(ofxDatGuiButtonEvent e)
-{
-	cout << "addFilterClick" << endl;
-	auto x = createFilterButton(this);
+//void ofApp::addFilterClick(ofxDatGuiButtonEvent e)
+//{
+//	cout << "addFilterClick" << endl;
+//	auto x = createFilterButton(this);
+//
+//	verticalPanel.push(x);
+//}
 
-	verticalPanel.push(x);
+void ofApp::addMediaClickByPath(string path = "")
+{
+	auto mediaButton = createMediaButton(this, path);
+	//
+	allComponents.push_back(mediaButton);
+	//
+	horizontalPanel.push(mediaButton);
 }
 
 void ofApp::addMediaClick(ofxDatGuiButtonEvent e)
 {
-	cout << "addMediaClick" << endl;
+	//cout << "addMediaClick" << endl;
 	auto mediaButton = createMediaButton(this);
 	//
 	allComponents.push_back(mediaButton);
