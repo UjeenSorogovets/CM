@@ -42,8 +42,6 @@ public:
 
 	void onFilterClick(ofxDatGuiButtonEvent e);
 
-	void addFilterClick(ofxDatGuiButtonEvent e);
-
 	void addMediaClick(ofxDatGuiButtonEvent e);
 
 	ofxDatGuiValuePlotter* plotter;
