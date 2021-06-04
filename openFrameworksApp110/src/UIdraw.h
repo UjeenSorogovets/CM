@@ -5,8 +5,10 @@
 #include "Component.h"
 #include "ComponentPanel.h"
 
+static vector<Component> allComponents;
 static ComponentPanel horizontalPanel;
-static ComponentPanel verticalPanel;
+//static ComponentPanel verticalPanel;
+static FiltersPanel verticalPanel;
 
 
 void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaType)
@@ -30,7 +32,7 @@ void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaType)
 
 	if (width > height)
 	{
-		cout << "width>height" << endl;
+		//cout << "width>height" << endl;
 		mediaViewer->height = maxHeight / (width / height);
 		mediaViewer->width = maxWidth;
 
@@ -39,7 +41,7 @@ void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaType)
 	}
 	else
 	{
-		cout << "width<height" << endl;
+		//cout << "width<height" << endl;
 		mediaViewer->height = maxHeight;
 		mediaViewer->width = maxWidth * (width / height);
 
@@ -47,7 +49,7 @@ void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaType)
 		mediaViewer->x = mediaViewer->startX + (maxWidth - mediaViewer->width) / 2;
 	}
 
-	cout << "height/width = " << height << "/" << width << endl;
+	//cout << "height/width = " << height << "/" << width << endl;
 }
 
 bool inViewerCondition(int x, int y, MediaViewer* mediaViewer)
@@ -57,31 +59,49 @@ bool inViewerCondition(int x, int y, MediaViewer* mediaViewer)
 	return condition;
 }
 
-Component createFilterButton(ofApp* ofApp)
+FilterComponent createFilterButton(ofApp* ofApp,string label)
 {
-	Component component;
-	auto testLabel = "tag " + to_string(verticalPanel.components.size());
-	component.component = new ofxDatGuiButton(testLabel);
-	component.path = testLabel;
+	FilterComponent component;
+	
+	component.component = new ofxDatGuiButton(label);
+	component.path = label;
 	component.type = FILTER;
 	component.component->onButtonEvent(ofApp, &ofApp::onFilterClick);
+	component.width = 100;
+	component.index = component.component->getIndex();
 
 	return component;
+	//
 }
 
-Component createMediaButton(ofApp* ofApp)
+FilterComponent createFilterButton(ofApp* ofApp, string label, std::function<vector<Component>(vector<Component>)> filterFunc)
+{
+	FilterComponent component;
+
+	component.component = new ofxDatGuiButton(label);
+	component.path = label;
+	component.type = FILTER;
+	component.component->onButtonEvent(ofApp, &ofApp::onFilterClick);
+	component.width = 100;
+	component.index = component.component->getIndex();
+	component.filterFunc = filterFunc;
+
+	return component;
+	//std::function<void(vector<Component>)> filterFunc
+}
+
+Component createMediaButton(ofApp* ofApp, string defaultPath="")
 {
 	Component component;
 	component.component = new ofxDatGuiButton("---");
 	component.component->setOpacity(0.0f);
-	component.component->onButtonEvent(ofApp, &ofApp::onButtonEvent);
+	//component.component->onButtonEvent(ofApp, &ofApp::onButtonEvent);
 
 	ofImage image;
 
-	ofFileDialogResult result = ofSystemLoadDialog("Load file");
-	if (result.bSuccess)
+	if (defaultPath!="")
 	{
-		string path = result.getPath();
+		string path = defaultPath;
 		ofVideoPlayer player;
 
 		//cout << "play load:" << player.load(path) << endl;
@@ -108,9 +128,50 @@ Component createMediaButton(ofApp* ofApp)
 		}
 		component.image = image;
 		component.path = path;
+
+		image.clear();
+		player.close();
+
 		if (!component.fetchXml())
 		{
 			cout << "xml load error [" << component.metaData.xmlPath << "]" << endl;
+		}
+	}
+	else
+	{
+		ofFileDialogResult result = ofSystemLoadDialog("Load file");
+		if (result.bSuccess)
+		{
+			string path = result.getPath();
+			ofVideoPlayer player;
+
+			if (image.load(path))
+			{
+				cout << "added image" << endl;
+				component.type = IMAGE;
+			}
+			else
+			{
+				if (player.load(path)) {
+					cout << "added video" << endl;
+					component.type = VIDEO;
+					player.play();
+					player.setPaused(true);
+					auto x = player.getPixels();
+					image.setFromPixels(x);
+				}
+				else
+				{
+					cout << "error open file" << endl;
+					component.type = UNKNOWN;
+				}
+			}
+			component.image = image;
+			component.path = path;
+			if (!component.fetchXml())
+			{
+				cout << "xml load error [" << component.metaData.xmlPath << "]" << endl;
+			}
 		}
 	}
 	return component;
@@ -157,7 +218,6 @@ void playPausePlayer(MediaViewer* mediaViewer)
 	if (!mediaViewer->isImageNow)
 	{
 		bool isPlaying = mediaViewer->videoPlayer.isPlaying();
-		//cout << isPlaying << endl;
 		if (isPlaying)
 		{
 			mediaViewer->videoPlayer.setPaused(true);
@@ -165,7 +225,6 @@ void playPausePlayer(MediaViewer* mediaViewer)
 		else
 		{
 			mediaViewer->videoPlayer.play();
-
 		}
 	}
 }
@@ -208,6 +267,20 @@ void updateAll(ComponentPanel componentPanel)
 	for (int i = 0; i < componentPanel.components.size(); i++)
 	{
 		Component currentComponent = componentPanel.components[i];
+		updateAll(currentComponent);
+	}
+}
+
+void updateAll(FilterComponent component)
+{
+	component.component->update();
+}
+
+void updateAll(FiltersPanel componentPanel)
+{
+	for (int i = 0; i < componentPanel.components.size(); i++)
+	{
+		FilterComponent currentComponent = componentPanel.components[i];
 		updateAll(currentComponent);
 	}
 }

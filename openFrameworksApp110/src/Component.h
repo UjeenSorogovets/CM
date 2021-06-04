@@ -10,9 +10,12 @@ class Component
 {
 public:
 
+
 	std::filesystem::path baseXmlPath = std::filesystem::current_path() / "Xml";
 	ofxDatGuiComponent* component;
 	ofImage image;
+
+	int index;
 
 	int startPosX;
 	int startPosY;
@@ -89,4 +92,20 @@ public:
 			return false;
 		}
 	}
+};
+
+inline vector<Component> withoutFilter(vector<Component>& components)
+{
+	std::cout << "withoutFilter"<< endl;
+
+	return components;
+}
+
+class FilterComponent : public Component
+{
+public:
+	vector<Component> components;
+	//std::function<const int&()> F([] { return 42; });
+	/*std::function<void(vector<Component>)> filterFunc;*/
+	std::function<vector<Component>(vector<Component>&)> filterFunc = withoutFilter;
 };

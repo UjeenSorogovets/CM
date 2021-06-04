@@ -467,3 +467,6 @@ FodyWeavers.xsd
 *.sln.iml
 
 Xml
+openFrameworksApp110_debug.lib
+openFrameworksApp110_debug.exe
+openFrameworksApp110_debug.exp

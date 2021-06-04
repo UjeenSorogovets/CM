@@ -1,6 +1,7 @@
 #include "ofApp.h"
 #include "UIdraw.h"
 #include <string> 
+#include <filesystem>
 
 void ofApp::mouseDragged(int x, int y, int button) {
 	if (choosedButtonNumber == -1)
@@ -65,8 +66,6 @@ void ofApp::mouseReleased(int x, int y, int button) {
 	isMouseClicked = false;
 	if (choosedButtonNumber != -1)
 	{
-		//cout << "isMouseClicked = " << isMouseClicked << endl;
-
 		helpImage.clear();
 
 		for (int i = 0; i < horizontalPanel.components.size(); i++)
@@ -106,26 +105,52 @@ void ofApp::mouseReleased(int x, int y, int button) {
 	}
 }
 
-//void createAddMediaButton(int x,int y,int width,int height,ofApp* app, vector<ofxDatGuiComponent*> components)
-//{
-//	ofxDatGuiComponent* component;
-//
-//	component = new ofxDatGuiButton("+");
-//	component->setPosition(x + 20, y + 20);
-//	component->setWidth(width, 0.0f);
-//	component->setHeight(height);
-//	component->onButtonEvent(app, &ofApp::addMediaClick);
-//	component->setOpacity(0.0f);
-//	components.push_back(component);
-//}
-
-
 int globalWidth = 1366;
 int globalHeight = 768;
 //int globalWidth = 1920;
 //int globalHeight = 1080;
 int widthDif = 1920 - globalWidth;
 int heightDif = 1080 - globalHeight;
+
+vector<Component> onlyImages(vector<Component>& components)
+{
+	for (int i = 0; i < components.size(); i++)
+	{
+		if (components[i].type != IMAGE)
+		{
+			components.erase(components.begin() + i);
+			i--;
+		}
+	}
+
+	return components;
+}
+
+vector<Component> onlyVideo(vector<Component>& components)
+{
+	cout << "only video!!!" << endl;
+	for (int i = 0; i < components.size(); i++)
+	{
+		if (components[i].type != VIDEO)
+		{
+			components.erase(components.begin() + i);
+			i--;
+		}
+	}
+
+	return components;
+}
+
+vector<Component> onlyFirstComponent(vector<Component>& components)
+{
+	for (int i = 1; i < components.size(); i++)
+	{
+			components.erase(components.begin() + i);
+			i--;
+	}
+
+	return components;
+}
 
 void ofApp::setup()
 {
@@ -142,13 +167,13 @@ void ofApp::setup()
 	component->setOpacity(0.0f);
 	components.push_back(component);
 
-	component = new ofxDatGuiButton("+");
+	/*component = new ofxDatGuiButton("+");
 	component->setPosition(x + 20, 800);
 	component->setWidth(100, 0.0f);
 	component->setHeight(100);
 	component->onButtonEvent(this, &ofApp::addFilterClick);
 	component->setOpacity(0.0f);
-	components.push_back(component);
+	components.push_back(component);*/
 	//
 	horizontalPanel.startPosX = 250;
 	horizontalPanel.startPosY = 30;
@@ -165,11 +190,25 @@ void ofApp::setup()
 	verticalPanel.offsetY = 10;
 	verticalPanel.horizontal = false;
 
-	for (int i = 0; i < 4; i++)
+	/*for (int i = 0; i < 4; i++)
 	{
-		auto x = createFilterButton(this);
+		auto x = createFilterButton(this, "Default");
 		verticalPanel.push(x);
-	}
+	}*/
+
+	verticalPanel.push(createFilterButton(this, "Default"));
+	verticalPanel.push(createFilterButton(this, "Only Image", onlyImages));
+	verticalPanel.push(createFilterButton(this, "Only Video", onlyVideo));
+	verticalPanel.push(createFilterButton(this, "Only First", onlyFirstComponent));
+
+
+	auto currentPath = fs::current_path().string()+"\\src\\videos\\" ;
+
+	addMediaClickByPath(currentPath + "video3.mp4");
+	addMediaClickByPath(currentPath + "video2.mp4");
+	addMediaClickByPath(currentPath + "img1.png");
+	addMediaClickByPath(currentPath + "img2.jpg");
+	
 	//rightViewer.imagePlayer.load("C:/Users/GAD/Desktop/image_2021-05-12_10-24-07.png");
 
 	webCam.initialize();
@@ -208,6 +247,21 @@ void drawAll(ComponentPanel componentPanel)
 	}
 }
 
+void drawAll(FilterComponent component)
+{
+	component.component->draw();
+	component.image.draw(component.currentPosX, component.currentPosY, component.width, component.height);
+}
+
+void drawAll(FiltersPanel componentPanel)
+{
+	for (int i = 0; i < componentPanel.components.size(); i++)
+	{
+		FilterComponent currentComponent = componentPanel.components[i];
+		drawAll(currentComponent);
+	}
+}
+
 void ofApp::draw()
 {
 	helpImage.draw(helpImageX, helpImageY, helpImageWidth, helpImageHeight);
@@ -237,25 +291,18 @@ void ofApp::draw()
 
 	ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
 	ofSetLineWidth(4.5); // A higher value will render thicker lines
-	ofDrawRectangle(20, 20, 1880-(widthDif), 1000 - (heightDif / 1.15));
 
-	ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
-	ofSetLineWidth(4.5); // A higher value will render thicker lines
+	ofDrawRectangle(20, 20, 1880-(widthDif), 1000 - (heightDif / 1.15));
+	
 	ofDrawRectangle(20, 20, 1880 - (widthDif), 120);
 
-	ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
-	ofSetLineWidth(4.5); // A higher value will render thicker lines
 	ofDrawRectangle(20, 20, 200, 1000-(heightDif/1.15));
 
 
 	if (isMousePressed)
 	{
-		ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
-		ofSetLineWidth(4.5); // A higher value will render thicker lines
 		ofDrawRectangle(leftViewer.startX, leftViewer.startY, leftViewer.maxWidth, leftViewer.maxHeight);
 
-		ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
-		ofSetLineWidth(4.5); // A higher value will render thicker lines
 		ofDrawRectangle(rightViewer.startX, rightViewer.startY, rightViewer.maxWidth, rightViewer.maxHeight);
 	}
 
@@ -266,21 +313,47 @@ void ofApp::draw()
 
 void ofApp::onFilterClick(ofxDatGuiButtonEvent e)
 {
-	cout << "onFilterClick" << e.target->getIndex() << endl;
+	int currentIndex = e.target->getIndex();
+	FilterComponent currentComponent;
+	cout << "onFilterClick index = " << currentIndex <<endl;
+	for (int i = 0; i < verticalPanel.components.size(); i++)
+	{
+		if (verticalPanel.components[i].index==currentIndex)
+		{
+			currentComponent = verticalPanel.components[i];
+		}
+	}
+
+	auto newComponents = allComponents;
+
+	newComponents = currentComponent.filterFunc(newComponents);
+
+	int count = newComponents.size();
+	cout << "newComponents size = " << count << endl;
+	horizontalPanel.components.clear();
+	for (int i = 0; i < count; i++)
+	{
+		horizontalPanel.push(newComponents[i]);
+	}
+	//
 }
 
-void ofApp::addFilterClick(ofxDatGuiButtonEvent e)
+void ofApp::addMediaClickByPath(string path = "")
 {
-	cout << "addFilterClick" << endl;
-	auto x = createFilterButton(this);
-
-	verticalPanel.push(x);
+	auto mediaButton = createMediaButton(this, path);
+	//
+	allComponents.push_back(mediaButton);
+	//
+	horizontalPanel.push(mediaButton);
 }
 
 void ofApp::addMediaClick(ofxDatGuiButtonEvent e)
 {
-	cout << "addMediaClick" << endl;
+	//cout << "addMediaClick" << endl;
 	auto mediaButton = createMediaButton(this);
+	//
+	allComponents.push_back(mediaButton);
+	//
 	horizontalPanel.push(mediaButton);
 }
 
