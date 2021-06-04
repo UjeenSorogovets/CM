@@ -172,8 +172,7 @@ void ofApp::setup()
 
 	auto currentPath = fs::current_path().string()+"\\src\\videos\\" ;
 
-	addMediaClickByPath(currentPath + "clip.mp4");
-	addMediaClickByPath(currentPath + "video1.mp4");
+	addMediaClickByPath(currentPath + "video3.mp4");
 	addMediaClickByPath(currentPath + "video2.mp4");
 	addMediaClickByPath(currentPath + "img1.png");
 	addMediaClickByPath(currentPath + "img2.jpg");
