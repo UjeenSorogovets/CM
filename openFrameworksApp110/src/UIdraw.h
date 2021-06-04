@@ -5,7 +5,6 @@
 #include "Component.h"
 #include "ComponentPanel.h"
 
-
 static ComponentPanel horizontalPanel;
 static ComponentPanel verticalPanel;
 

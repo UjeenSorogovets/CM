@@ -260,7 +260,7 @@ void ofApp::draw()
 	}
 
 
-	webCam.draw(globalWidth, globalHeight, 255);
+	webCam.draw(globalWidth, globalHeight, 100);
 }
 
 
