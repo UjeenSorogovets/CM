@@ -94,6 +94,18 @@
     <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxXmlSettings\libs\tinyxmlparser.cpp">
       <Filter>addons\ofxXmlSettings\libs</Filter>
     </ClCompile>
+    <ClCompile Include="src\Component .cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ComponentPanel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UIdraw .cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WebCamGrabber.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

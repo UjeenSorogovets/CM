@@ -1,10 +1,10 @@
 #pragma once
 
 #include "ofMain.h"
+//#include "Component.h"
+//#include "ComponentPanel.h"
 #include "ofxDatGui.h"
 #include "MediaViewer.h"
-#include "Component.h"
-#include "ComponentPanel.h"
 #include "WebCamGrabber.h"
 
 namespace fs = std::filesystem;
@@ -45,7 +45,7 @@ public:
 
 	void onFilterClick(ofxDatGuiButtonEvent e);
 
-	void addFilterClick(ofxDatGuiButtonEvent e);
+	//void addFilterClick(ofxDatGuiButtonEvent e);
 
 	void addMediaClick(ofxDatGuiButtonEvent e);
 
