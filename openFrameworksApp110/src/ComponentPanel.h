@@ -2,6 +2,7 @@
 
 #include "Component.h"
 
+
 class ComponentPanel
 {
 public:
@@ -18,50 +19,24 @@ public:
 
 	bool horizontal = true;
 
-	void push(Component component)
-	{
-		if (component.path != "")
-		{
-			int size = components.size();
-			component.startPosX = startPosX;
-			component.startPosY = startPosY;
+	void push(Component component);
+};
 
-			component.component->setHeight(componentHeight);
-			component.component->setWidth(componentWidth, 0);
+class FiltersPanel
+{
+public:
+	vector<FilterComponent> components;
 
-			component.height = componentHeight;
-			component.width = componentWidth;
+	int startPosX;
+	int startPosY;
 
-			if (size == 0)
-			{
-				component.component->setPosition(startPosX, startPosY);
+	int componentHeight = 100;
+	int componentWidth = 100;
 
-				cout << "add" << component.startPosX << endl;
-			}
-			else
-			{
-				if (horizontal)
-				{
-					component.startPosX = startPosX + component.width * (size)+offsetX * (size);
-					component.component->setLabel(to_string(size));
-					cout << "add" << component.startPosX << endl;
-				}
-				else
-				{
-					component.startPosY = startPosY * (size + 1) + offsetY * (size);
-				}
-				component.component->setPosition(component.startPosX, component.startPosY);
-			}
+	int offsetX;
+	int offsetY;
 
-			component.currentPosX = component.startPosX;
-			component.currentPosY = component.startPosY;
+	bool horizontal = true;
 
-			/*cout << "start:" << endl;
-			cout << "X = " << component.startPosX << "\nY = " << component.startPosY << endl;
-			cout << "current:" << endl;
-			cout << "X = " << component.currentPosX << "\nY = " << component.currentPosY << endl;*/
-
-			components.push_back(component);
-		}
-	}
+	void push(FilterComponent component);
 };
