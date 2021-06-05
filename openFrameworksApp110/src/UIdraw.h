@@ -1,9 +1,9 @@
 #pragma once
-#include <Component.h>
-#include "ofApp.h"
-#include "MediaViewer.h"
+//#include <Component.h>
 #include "Component.h"
 #include "ComponentPanel.h"
+#include "MediaViewer.h"
+#include "ofApp.h"
 
 extern vector<Component> allComponents;
 extern ComponentPanel horizontalPanel;

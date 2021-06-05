@@ -50,7 +50,7 @@ void WebCamGrabber::update()
 
 			if (backStab)
 			{
-				cout << backMean << endl;
+				//cout << backMean << endl;
 				cv::accumulateWeighted(gray, backImg, 0.02);
 			}
 			cv::Mat back;

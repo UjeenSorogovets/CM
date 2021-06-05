@@ -12,4 +12,17 @@ public:
 	ComponentType type;
 	std::filesystem::path contentPath;
 	std::filesystem::path xmlPath;
+
+	//typedef tuple <string, string> labelTextPair;
+
+	//vector<tuple <string, string>> getTuples()
+	//{
+	//	vector<tuple <string, string>> tuples;
+
+	//	tuples.push_back(make_tuple("Name", "Test name"));
+	//	tuples.push_back(make_tuple("Size", "100500"));
+	//	tuples.push_back(make_tuple("Info", "Nothing"));
+
+	//	return tuples;
+	//}
 };
