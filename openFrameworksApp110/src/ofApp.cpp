@@ -3,6 +3,8 @@
 #include <string> 
 #include <filesystem>
 
+#include <functional>
+
 void ofApp::mouseDragged(int x, int y, int button) {
 	if (choosedButtonNumber == -1)
 	{
@@ -29,6 +31,8 @@ void ofApp::mouseDragged(int x, int y, int button) {
 }
 
 void ofApp::mousePressed(int x, int y, int button) {
+
+	cout << "[mousePressed] " << x << " " << y << " " << button << endl;
 	//cout << "mousePressed" << endl;
 	isMouseClicked = true;
 	//cout << "isMouseClicked = " << isMouseClicked << endl;
@@ -63,6 +67,8 @@ void ofApp::mousePressed(int x, int y, int button) {
 }
 
 void ofApp::mouseReleased(int x, int y, int button) {
+
+
 	isMouseClicked = false;
 	if (choosedButtonNumber != -1)
 	{
@@ -78,12 +84,12 @@ void ofApp::mouseReleased(int x, int y, int button) {
 
 		int res = choosedButtonNumber;
 
-		int x = mouseX;
-		int y = mouseY;
+			x = mouseX;
+			y = mouseY;
 		//cout << x << endl;
 		//cout << y << endl;
 
-		bool leftViewerCondition = inViewerCondition(x,y, &leftViewer);
+		bool leftViewerCondition = inViewerCondition(x, y, &leftViewer);
 		bool rightViewerCondition = inViewerCondition(x, y, &rightViewer);
 
 		if (leftViewerCondition)
@@ -145,8 +151,8 @@ vector<Component> onlyFirstComponent(vector<Component>& components)
 {
 	for (int i = 1; i < components.size(); i++)
 	{
-			components.erase(components.begin() + i);
-			i--;
+		components.erase(components.begin() + i);
+		i--;
 	}
 
 	return components;
@@ -158,7 +164,7 @@ void ofApp::setup()
 	ofSetWindowShape(globalWidth, globalHeight);
 
 	ofxDatGuiComponent* component;
-	
+
 	component = new ofxDatGuiButton("+");
 	component->setPosition(x + 20, y + 20);
 	component->setWidth(100, 0.0f);
@@ -180,9 +186,9 @@ void ofApp::setup()
 	horizontalPanel.offsetX = 20;
 	horizontalPanel.offsetY = 0;
 	//
-	
-	leftViewer = MediaViewer(250, 180, 800-(widthDif/2), 800- (heightDif/1.25));
-	rightViewer = MediaViewer(1050- (widthDif / 2), 180, 800- (widthDif / 2), 800 - (heightDif/1.25));
+
+	leftViewer = MediaViewer(250, 180, 800 - (widthDif / 2), 800 - (heightDif / 1.25));
+	rightViewer = MediaViewer(1050 - (widthDif / 2), 180, 800 - (widthDif / 2), 800 - (heightDif / 1.25));
 
 	verticalPanel.startPosX = 60;
 	verticalPanel.startPosY = 150;
@@ -202,16 +208,17 @@ void ofApp::setup()
 	verticalPanel.push(createFilterButton(this, "Only First", onlyFirstComponent));
 
 
-	auto currentPath = fs::current_path().string()+"\\src\\videos\\" ;
+	auto currentPath = fs::current_path().string() + "\\src\\videos\\";
 
 	addMediaClickByPath(currentPath + "video3.mp4");
 	addMediaClickByPath(currentPath + "video2.mp4");
 	addMediaClickByPath(currentPath + "img1.png");
 	addMediaClickByPath(currentPath + "img2.jpg");
-	
-	//rightViewer.imagePlayer.load("C:/Users/GAD/Desktop/image_2021-05-12_10-24-07.png");
 
-	webCam.initialize();
+	//rightViewer.imagePlayer.load("C:/Users/GAD/Desktop/image_2021-05-12_10-24-07.png");
+	using namespace std::placeholders;
+
+	webCam.initialize(std::bind(&ofApp::mousePressed, this, _1, _2, _3));
 }
 
 void updateAll(MediaViewer* mediaViewer)
@@ -229,7 +236,7 @@ void ofApp::update()
 
 	updateAll(&leftViewer);
 	updateAll(&rightViewer);
-	
+
 	helpImage.update();
 
 	webCam.update();
@@ -290,10 +297,10 @@ void drawAll(MediaViewer mediaViewer)
 void ofApp::draw()
 {
 	helpImage.draw(helpImageX, helpImageY, helpImageWidth, helpImageHeight);
-	
+
 	drawAll(horizontalPanel);
 	drawAll(verticalPanel);
-	
+
 	drawAll(leftViewer);
 	drawAll(rightViewer);
 
@@ -303,11 +310,11 @@ void ofApp::draw()
 	ofNoFill(); // If we omit this and leave ofFill(), all the shapes will be filled!
 	ofSetLineWidth(4.5); // A higher value will render thicker lines
 
-	ofDrawRectangle(20, 20, 1880-(widthDif), 1000 - (heightDif / 1.15));
-	
+	ofDrawRectangle(20, 20, 1880 - (widthDif), 1000 - (heightDif / 1.15));
+
 	ofDrawRectangle(20, 20, 1880 - (widthDif), 120);
 
-	ofDrawRectangle(20, 20, 200, 1000-(heightDif/1.15));
+	ofDrawRectangle(20, 20, 200, 1000 - (heightDif / 1.15));
 
 
 	if (isMousePressed)
@@ -326,10 +333,10 @@ void ofApp::onFilterClick(ofxDatGuiButtonEvent e)
 {
 	int currentIndex = e.target->getIndex();
 	FilterComponent currentComponent;
-	cout << "onFilterClick index = " << currentIndex <<endl;
+	cout << "onFilterClick index = " << currentIndex << endl;
 	for (int i = 0; i < verticalPanel.components.size(); i++)
 	{
-		if (verticalPanel.components[i].index==currentIndex)
+		if (verticalPanel.components[i].index == currentIndex)
 		{
 			currentComponent = verticalPanel.components[i];
 		}
