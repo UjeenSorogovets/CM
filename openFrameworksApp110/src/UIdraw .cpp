@@ -1,5 +1,12 @@
 #include "UIdraw.h"
 
+
+vector<Component> allComponents;
+ComponentPanel horizontalPanel;
+//static ComponentPanel verticalPanel;
+FiltersPanel verticalPanel;
+
+
 void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaType)
 {
 	float height;
@@ -48,10 +55,10 @@ bool inViewerCondition(int x, int y, MediaViewer* mediaViewer)
 	return condition;
 }
 
-FilterComponent createFilterButton(ofApp* ofApp,string label)
+FilterComponent createFilterButton(ofApp* ofApp, string label)
 {
 	FilterComponent component;
-	
+
 	component.component = new ofxDatGuiButton(label);
 	component.path = label;
 	component.type = FILTER;
@@ -88,7 +95,7 @@ Component createMediaButton(ofApp* ofApp, string defaultPath)
 
 	ofImage image;
 
-	if (defaultPath!="")
+	if (defaultPath != "")
 	{
 		string path = defaultPath;
 		ofVideoPlayer player;

@@ -214,6 +214,12 @@ void ofApp::setup()
 	webCam.initialize();
 }
 
+void updateAll(MediaViewer* mediaViewer)
+{
+	mediaViewer->imagePlayer.update();
+	mediaViewer->videoPlayer.update();
+}
+
 void ofApp::update()
 {
 	for (int i = 0; i < components.size(); i++) components[i]->update();
@@ -221,15 +227,17 @@ void ofApp::update()
 	updateAll(horizontalPanel);
 	updateAll(verticalPanel);
 
-	leftViewer.imagePlayer.update();
-	leftViewer.videoPlayer.update();
-
-	rightViewer.imagePlayer.update();
-	rightViewer.videoPlayer.update();
+	updateAll(&leftViewer);
+	updateAll(&rightViewer);
 	
 	helpImage.update();
 
 	webCam.update();
+}
+
+void drawAll(InfoPanel panel)
+{
+	panel.myInput->draw();
 }
 
 void drawAll(Component component)
@@ -262,30 +270,33 @@ void drawAll(FiltersPanel componentPanel)
 	}
 }
 
+void drawAll(MediaViewer mediaViewer)
+{
+	mediaViewer.infoPanel.myInput->draw();
+	mediaViewer.infoPanel.myInput2->draw();
+	mediaViewer.infoPanel.myInput3->draw();
+	mediaViewer.infoPanel.myInput4->draw();
+
+	if (mediaViewer.isImageNow)
+	{
+		mediaViewer.imagePlayer.draw(mediaViewer.x, mediaViewer.y, mediaViewer.width, mediaViewer.height);
+	}
+	else
+	{
+		mediaViewer.videoPlayer.draw(mediaViewer.x, mediaViewer.y, mediaViewer.width, mediaViewer.height);
+	}
+}
+
 void ofApp::draw()
 {
 	helpImage.draw(helpImageX, helpImageY, helpImageWidth, helpImageHeight);
 	
 	drawAll(horizontalPanel);
 	drawAll(verticalPanel);
+	
+	drawAll(leftViewer);
+	drawAll(rightViewer);
 
-	if (leftViewer.isImageNow)
-	{
-		leftViewer.imagePlayer.draw(leftViewer.x, leftViewer.y, leftViewer.width, leftViewer.height);
-	}
-	else
-	{
-		leftViewer.videoPlayer.draw(leftViewer.x, leftViewer.y, leftViewer.width, leftViewer.height);
-	}
-
-	if (rightViewer.isImageNow)
-	{
-		rightViewer.imagePlayer.draw(rightViewer.x, rightViewer.y, rightViewer.width, rightViewer.height);
-	}
-	else
-	{
-		rightViewer.videoPlayer.draw(rightViewer.x, rightViewer.y, rightViewer.width, rightViewer.height);
-	}
 
 	for (int i = 0; i < components.size(); i++) components[i]->draw();
 

@@ -5,10 +5,10 @@
 #include "Component.h"
 #include "ComponentPanel.h"
 
-static vector<Component> allComponents;
-static ComponentPanel horizontalPanel;
+extern vector<Component> allComponents;
+extern ComponentPanel horizontalPanel;
 //static ComponentPanel verticalPanel;
-static FiltersPanel verticalPanel;
+extern FiltersPanel verticalPanel;
 
 
 void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaType);
