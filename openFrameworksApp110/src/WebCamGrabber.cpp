@@ -43,6 +43,7 @@ void WebCamGrabber::update()
 	if (vidGrabber.isFrameNew()) {
 
 		cv::Mat in = ofxCv::toCv(vidGrabber);
+		cv::flip(in, in, 1);
 		cv::Mat out, gray;
 		cv::cvtColor(in, gray, cv::COLOR_BGR2GRAY);
 		if (!backImg.empty())
@@ -50,7 +51,14 @@ void WebCamGrabber::update()
 
 			if (backStab)
 			{
-				cout << backMean << endl;
+				//cout << backMean << endl;
+				string text = "Don't move to identify background [" + std::to_string((int)(255-backMean) * 100 / 255) + "\%]";
+				cv::Size textSize= cv::getTextSize(text, cv::FONT_HERSHEY_PLAIN,1.5, 1,nullptr);
+				cv::Point2i textCoord;
+				textCoord.x = camWidth / 2 - textSize.width / 2;
+				textCoord.y = camHeight / 2 - textSize.height / 2;
+				cv::putText(in, text, textCoord, cv::FONT_HERSHEY_PLAIN, 1.5, cv::Scalar(0, 0, 0,255), 3);
+				cv::putText(in, text, textCoord, cv::FONT_HERSHEY_PLAIN, 1.5, cv::Scalar( backMean, 255, backMean,255), 2);
 				cv::accumulateWeighted(gray, backImg, 0.02);
 			}
 			cv::Mat back;
@@ -74,15 +82,18 @@ void WebCamGrabber::update()
 
 			cv::morphologyEx(diff, diff, cv::MORPH_ERODE, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(20, 20)));
 			cv::morphologyEx(diff, diff, cv::MORPH_CLOSE, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(7, 7)));
+			std::vector<cv::Mat> channels;
+			cv::split(in, channels);
 			if (!backStab)
 			{
 				cv::morphologyEx(diff, mask, cv::MORPH_DILATE, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(20, 20)));
-				cv::bitwise_and(in, in, out, mask);
+				channels.push_back(mask);
 			}
 			else
 			{
-				cv::bitwise_and(in, in, out, mask);
+				//channels.push_back(cv::Mat::ones(in.size(), CV_8UC1));
 			}
+			cv::merge(channels, out);
 			//cv::morphologyEx(diff, diff, cv::MORPH_ERODE, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(20, 20)));
 			//cv::copyMakeBorder(diff, diff, -50, -50, -50, -50, cv::BORDER_CONSTANT, cv::Scalar(0));
 
@@ -94,7 +105,7 @@ void WebCamGrabber::update()
 			vector<vector<cv::Point> > contours;
 			vector<cv::Vec4i> hierarchy;
 			findContours(diff, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
-			cv::Mat drawing = cv::Mat::zeros(in.size(), CV_8UC3);
+			//cv::Mat drawing = cv::Mat::zeros(in.size(), CV_8UC3);
 			size_t max_size = 0;
 			size_t max_i = 0;
 			for (size_t i = 0; i < contours.size(); i++)
@@ -110,14 +121,14 @@ void WebCamGrabber::update()
 			bool gesturePress = false;
 			if (backStab)
 			{
-				color = cv::Scalar(255, 0, 0);
+				color = cv::Scalar(255, 0, 0,255);
 			}
 			else
 			{
 				if (max_size > 4000)
 				{
 					gesturePress = true;
-					color = cv::Scalar(0, 0, 255);
+					color = cv::Scalar(0, 0, 255, 255);
 					auto rect = cv::minAreaRect(contours[max_i]);/*
 					cv::Point2f points[4];
 					rect.points(points);
@@ -130,11 +141,11 @@ void WebCamGrabber::update()
 					mouse.x = (points[0].x + points[1].x) / 2;
 					mouse.y = (points[0].y + points[1].y) / 2;*/
 					mouse = rect.center;
-					cv::circle(drawing , mouse, 10, color, 2);
+					cv::circle(out , mouse, 10, color, 2);
 				}
 				else
 				{
-					color = cv::Scalar(0, 255, 0);
+					color = cv::Scalar(0, 255, 0,255);
 				}
 				//cout << "AREA: " << max_size << endl;
 			}
@@ -149,10 +160,10 @@ void WebCamGrabber::update()
 					
 					timer = std::chrono::system_clock::now();
 					//auto rect = cv::minAreaRect(contours[max_i]);
-					clickCallback(globalW-(1.0*mouse.x*globalW/camWidth), (1.0*mouse.y*globalH / camHeight), 99);
+					clickCallback((1.0*mouse.x*globalW/camWidth), (1.0*mouse.y*globalH / camHeight), 99);
 
-					color = cv::Scalar(255, 255, 255);
-					cv::circle(drawing, cv::minAreaRect(contours[max_i]).center, 6, color, 4);
+					color = cv::Scalar(255, 255, 255, 255);
+					cv::circle(out, cv::minAreaRect(contours[max_i]).center, 6, color, 4);
 				}
 			}
 
@@ -162,7 +173,7 @@ void WebCamGrabber::update()
 			//cout << backMean << endl;
 			//cv::adaptiveThreshold(diff, out, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY, 7, 10);
 			//cv::Canny(out, out, 50, 200);
-			cv::addWeighted(drawing, 0.5, out, 0.5, 0, out);
+			//cv::addWeighted(drawing, 0.5, out, 0.5, 0, out);
 			ofxCv::toOf(out, videoImage);
 			videoImage.update();
 		}
@@ -187,7 +198,7 @@ void WebCamGrabber::draw(int w, int h, float a)
 {
 	ofEnableAlphaBlending();
 	ofSetColor(255, 255, 255, a);
-	videoImage.draw(w, 0, -w, h);
+	videoImage.draw(0, 0, w, h);
 	globalH = h;
 	globalW = w;
 	ofDisableAlphaBlending();
