@@ -6,7 +6,6 @@
 #include "ofxDatGui.h"
 #include "MediaViewer.h"
 #include "WebCamGrabber.h"
-
 namespace fs = std::filesystem;
 
 class ofApp : public ofBaseApp{

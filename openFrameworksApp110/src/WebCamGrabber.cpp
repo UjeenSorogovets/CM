@@ -1,8 +1,9 @@
 #include "WebCamGrabber.h"
 #include "opencv2/ximgproc.hpp"
 
-bool WebCamGrabber::initialize()
+bool WebCamGrabber::initialize(std::function<void(int, int, int)> clickCallback)
 {
+	this->clickCallback = clickCallback;
 	//this->app = app;
 	//playPausePlayer(nullptr);
 	//get back a list of devices.
@@ -52,11 +53,12 @@ void WebCamGrabber::update()
 				cout << backMean << endl;
 				cv::accumulateWeighted(gray, backImg, 0.02);
 			}
+			cv::Mat back;
 			cv::Mat diff;
-			cv::convertScaleAbs(backImg, diff);
-			cv::absdiff(diff, gray, diff);
+			cv::convertScaleAbs(backImg, back);
+			cv::absdiff(back, gray, back);
 			//cv::GaussianBlur(diff, diff, cv::Size(7, 7), 0);
-			cv::threshold(diff, diff, 30, 255, cv::THRESH_BINARY);
+			cv::threshold(back, diff, 30, 255, cv::THRESH_BINARY);
 			//diff.copyTo(out);
 			backMean = cv::mean(diff)[0];
 
@@ -68,10 +70,19 @@ void WebCamGrabber::update()
 			{
 				backStab = false;
 			}
-
+			cv::Mat mask;
 
 			cv::morphologyEx(diff, diff, cv::MORPH_ERODE, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(20, 20)));
 			cv::morphologyEx(diff, diff, cv::MORPH_CLOSE, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(7, 7)));
+			if (!backStab)
+			{
+				cv::morphologyEx(diff, mask, cv::MORPH_DILATE, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(20, 20)));
+				cv::bitwise_and(in, in, out, mask);
+			}
+			else
+			{
+				cv::bitwise_and(in, in, out, mask);
+			}
 			//cv::morphologyEx(diff, diff, cv::MORPH_ERODE, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(20, 20)));
 			//cv::copyMakeBorder(diff, diff, -50, -50, -50, -50, cv::BORDER_CONSTANT, cv::Scalar(0));
 
@@ -95,6 +106,7 @@ void WebCamGrabber::update()
 				}
 			}
 			cv::Scalar color;
+			cv::Point2i mouse = cv::Point(0,0);
 			bool gesturePress = false;
 			if (backStab)
 			{
@@ -104,16 +116,28 @@ void WebCamGrabber::update()
 			{
 				if (max_size > 4000)
 				{
+					gesturePress = true;
 					color = cv::Scalar(0, 0, 255);
+					auto rect = cv::minAreaRect(contours[max_i]);/*
+					cv::Point2f points[4];
+					rect.points(points);
+
+					cv::circle(drawing, points[0], 2, color, 2);
+					cv::circle(drawing, points[1], 2, color, 2);
+					cv::circle(drawing, points[2], 2, color, 2);
+					cv::circle(drawing, points[3], 2, color, 2);*/
+					/*
+					mouse.x = (points[0].x + points[1].x) / 2;
+					mouse.y = (points[0].y + points[1].y) / 2;*/
+					mouse = rect.center;
+					cv::circle(drawing , mouse, 10, color, 2);
 				}
 				else
 				{
-					gesturePress = true;
 					color = cv::Scalar(0, 255, 0);
 				}
 				//cout << "AREA: " << max_size << endl;
 			}
-
 			if (!gesturePress)
 			{
 				timer = std::chrono::system_clock::now();
@@ -122,20 +146,23 @@ void WebCamGrabber::update()
 			{
 				if (std::chrono::system_clock::now() - timer > gestureDur)
 				{
+					
 					timer = std::chrono::system_clock::now();
-					//auto M = cv::moments(contours[max_i]);
-					//app->mousePressed(M.m10/M.m00, M.m01 / M.m00, 0);
+					//auto rect = cv::minAreaRect(contours[max_i]);
+					clickCallback(globalW-(1.0*mouse.x*globalW/camWidth), (1.0*mouse.y*globalH / camHeight), 99);
+
+					color = cv::Scalar(255, 255, 255);
+					cv::circle(drawing, cv::minAreaRect(contours[max_i]).center, 6, color, 4);
 				}
 			}
 
-			drawContours(drawing, contours, (int)max_i, color, 2, cv::LINE_8, hierarchy, 0);
-
+			//drawContours(drawing, contours, (int)max_i, color, 2, cv::LINE_8, hierarchy, 0);
 			//cv::ximgproc::thinning(diff, diff, cv::ximgproc::THINNING_GUOHALL);
 
 			//cout << backMean << endl;
 			//cv::adaptiveThreshold(diff, out, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY, 7, 10);
 			//cv::Canny(out, out, 50, 200);
-			cv::addWeighted(drawing, 0.5, in, 0.5, 0, out);
+			cv::addWeighted(drawing, 0.5, out, 0.5, 0, out);
 			ofxCv::toOf(out, videoImage);
 			videoImage.update();
 		}
@@ -161,5 +188,7 @@ void WebCamGrabber::draw(int w, int h, float a)
 	ofEnableAlphaBlending();
 	ofSetColor(255, 255, 255, a);
 	videoImage.draw(w, 0, -w, h);
+	globalH = h;
+	globalW = w;
 	ofDisableAlphaBlending();
 }

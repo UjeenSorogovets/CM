@@ -1,6 +1,7 @@
 #pragma one
 
 #include "ofMain.h"
+//#include "ofApp.h"
 #include "ofxCv.h"
 //#include <opencv2/ximgproc.hpp>
 #include <chrono>
@@ -19,14 +20,17 @@ public:
 	double backMean = 255;
 	int camWidth = 640;
 	int camHeight = 480;
+
+	int globalW;
+	int globalH;
 	cv::RNG rng = cv::RNG(12345);
 
 	std::chrono::time_point<std::chrono::system_clock> timer;
-	std::chrono::duration<int, std::micro> gestureDur = 1s;
+	std::chrono::duration<int, std::micro> gestureDur = 3s;
 
-	//ofApp *app;
+	std::function<void(int,int,int)> clickCallback;
 
-	bool initialize();
+	bool initialize(std::function<void(int, int, int)> clickCallback);
 
 	void update();
 
