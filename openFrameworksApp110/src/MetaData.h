@@ -13,6 +13,7 @@ public:
 	ofFloatColor meanColor;
 	double meanLuminacance;
 	double videoRythm = 0;
+	int faceCount = 0;
 	std::filesystem::path contentPath;
 	std::filesystem::path xmlPath;
 

@@ -1,9 +1,30 @@
 #include "Component.h"
 
 using namespace std;
-ofFloatColor Component::getColor(cv::Mat *img)
+
+
+int Component::countFaces(cv::Mat &frame)
 {
-	cv::Scalar s = cv::mean(*img);
+	cv::Mat gray;
+	cv::cvtColor(frame, gray, cv::COLOR_RGB2GRAY);
+	cv::equalizeHist(gray, gray);
+	string face_cascade_name = "src/haarcascade_frontalface_alt.xml";
+
+	cv::CascadeClassifier face_cascade;
+	face_cascade.load(face_cascade_name);
+	if (face_cascade.empty())
+	{
+		cout << "[emty cascade]" << endl;
+		return 0;
+	}
+	std::vector<cv::Rect> faces;
+	face_cascade.detectMultiScale(gray, faces);
+	return faces.size();
+}
+
+ofFloatColor Component::getColor(cv::Mat &img)
+{
+	cv::Scalar s = cv::mean(img);
 	cout << s << endl;
 	return ofFloatColor(s.val[0], s.val[1], s.val[2], s.val[3]);
 }
@@ -12,7 +33,7 @@ double Component::getLum(cv::Mat &img)
 {
 	cv::Mat gray;
 	cv::cvtColor(img, gray, CV_BGR2GRAY);
-	return (getColor(&gray))[0];
+	return (getColor(gray))[0];
 }
 
 void Component::getFrames(cv::Mat *_frame, double &rythm,  const string path, const ComponentType type)
@@ -130,10 +151,12 @@ bool Component::fetchXml()
 		cout <<frame.size() << endl;
 
 		cout << "[rythm]" << metaData.videoRythm << endl;
-		metaData.meanColor = getColor(&frame);
+		metaData.meanColor = getColor(frame);
 		cout << "[lcolor]" << metaData.meanColor << endl;
-		//metaData.meanLuminacance = getLum(frame);
-		//cout << "[lum]" << metaData.meanLuminacance << endl;
+		metaData.meanLuminacance = getLum(frame);
+		cout << "[lum]" << metaData.meanLuminacance << endl;
+		metaData.faceCount = countFaces(frame);
+		cout << "[faceCount]" << metaData.faceCount << endl;
 		if (metaData.xmlRoot.load(metaData.xmlPath))
 		{
 			ofXml mainNode = metaData.xmlRoot.getChild("component");
