@@ -6,6 +6,7 @@
 #include "ofxDatGui.h"
 #include "MediaViewer.h"
 #include "WebCamGrabber.h"
+
 namespace fs = std::filesystem;
 
 class ofApp : public ofBaseApp{
@@ -47,6 +48,9 @@ public:
 	//void addFilterClick(ofxDatGuiButtonEvent e);
 
 	void addMediaClick(ofxDatGuiButtonEvent e);
+	void playEvent(ofxDatGuiButtonEvent e);
+	void pauseEvent(ofxDatGuiButtonEvent e);
+	void stopEvent(ofxDatGuiButtonEvent e);
 
 	ofxDatGuiValuePlotter* plotter;
 	vector<ofxDatGuiComponent*> components;
@@ -61,5 +65,6 @@ public:
 	void onColorPickerEvent(ofxDatGuiColorPickerEvent e);
 	void on2dPadEvent(ofxDatGui2dPadEvent e);
 	void onTextInputEvent(ofxDatGuiTextInputEvent e);
-		
+	
+	
 };

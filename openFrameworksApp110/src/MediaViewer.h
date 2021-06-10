@@ -16,17 +16,10 @@ public:
 	int height;
 	int width;
 
-	//vector<ofxDatGuiComponent> components;
 	ofxDatGuiTextInput* myInput;
 	ofxDatGuiTextInput* myInput2;
 	ofxDatGuiTextInput* myInput3;
 	ofxDatGuiTextInput* myInput4;
-
-	//ofxDatGuiTextInput* myInput_;
-	//ofxDatGuiTextInput* myInput2_;
-	//ofxDatGuiTextInput* myInput3_;
-	//ofxDatGuiTextInput* myInput4_;
-
 
 	InfoPanel()
 	{
@@ -59,6 +52,10 @@ public:
 	int infoHeight;
 
 	InfoPanel infoPanel;
+
+	ofxDatGuiButton* play;
+	ofxDatGuiButton* pause;
+	ofxDatGuiButton* stop;
 
 	MediaViewer()
 	{

@@ -206,6 +206,7 @@ vector<Component> onlyFirstComponent(vector<Component>& components)
 	return components;
 }
 
+
 void ofApp::setup()
 {
 	ofSetWindowPosition(0, 0);
@@ -241,7 +242,13 @@ void ofApp::setup()
 	//
 
 	leftViewer = MediaViewer(250, 180, 800 - (widthDif / 2), 800 - (heightDif / 1.25));
+	leftViewer.play -> onButtonEvent(this, &ofApp::playEvent);
+	leftViewer.pause->onButtonEvent(this, &ofApp::pauseEvent);
+	leftViewer.stop->onButtonEvent(this, &ofApp::stopEvent);
 	rightViewer = MediaViewer(1050 - (widthDif / 2), 180, 800 - (widthDif / 2), 800 - (heightDif / 1.25));
+	rightViewer.play->onButtonEvent(this, &ofApp::playEvent);
+	rightViewer.pause->onButtonEvent(this, &ofApp::pauseEvent);
+	rightViewer.stop->onButtonEvent(this, &ofApp::stopEvent);
 
 	verticalPanel.startPosX = 30;
 	verticalPanel.startPosY = 150;
@@ -271,6 +278,10 @@ void updateAll(MediaViewer* mediaViewer)
 {
 	mediaViewer->imagePlayer.update();
 	mediaViewer->videoPlayer.update();
+
+	mediaViewer->play->update();
+	mediaViewer->pause->update();
+	mediaViewer->stop->update();
 }
 
 void ofApp::update()
@@ -330,7 +341,9 @@ void drawAll(MediaViewer mediaViewer)
 	mediaViewer.infoPanel.myInput3->draw();
 	mediaViewer.infoPanel.myInput4->draw();
 
-
+	mediaViewer.play->draw();
+	mediaViewer.pause->draw();
+	mediaViewer.stop->draw();
 	//mediaViewer.infoPanel.myInput_->draw();
 	//mediaViewer.infoPanel.myInput2_->draw();
 	//mediaViewer.infoPanel.myInput3_->draw();
@@ -427,6 +440,27 @@ void ofApp::addMediaClickByPath(string path = "")
 	horizontalPanel.push(mediaButton);
 }
 
+void ofApp::playEvent(ofxDatGuiButtonEvent e)
+{
+	cout << "playEvent" << endl;
+	bool leftViewerCond = (mouseX <= leftViewer.startX + leftViewer.maxWidth);
+	MediaViewer mediaViewer = leftViewerCond ? leftViewer : rightViewer;
+	mediaViewer.videoPlayer.play();
+}
+void ofApp::pauseEvent(ofxDatGuiButtonEvent e)
+{
+	cout << "pauseEvent" << endl;
+	bool leftViewerCond = (mouseX <= leftViewer.startX + leftViewer.maxWidth);
+	MediaViewer mediaViewer = leftViewerCond ? leftViewer : rightViewer;
+	mediaViewer.videoPlayer.setPaused(true);
+}
+void ofApp::stopEvent(ofxDatGuiButtonEvent e)
+{
+	cout << "stopEvent" << endl;
+	bool leftViewerCond = (mouseX <= leftViewer.startX + leftViewer.maxWidth);
+	MediaViewer mediaViewer = leftViewerCond ? leftViewer : rightViewer;
+	mediaViewer.videoPlayer.stop();
+}
 void ofApp::addMediaClick(ofxDatGuiButtonEvent e)
 {
 	//cout << "addMediaClick" << endl;

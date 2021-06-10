@@ -33,22 +33,6 @@ InfoPanel::InfoPanel(int x_, int y_, int width_, int height_)
 	myInput4->setWidth(width, 0);
 	myInput4->setPosition(x, y + 60);
 
-
-	/*myInput_ = new ofxDatGuiTextInput("text input", "# open frameworks #");
-	myInput_->setWidth(halfWidth, 0);
-	myInput_->setPosition(x + halfWidth, y);
-
-	myInput2_ = new ofxDatGuiTextInput("text input", "# open frameworks #");
-	myInput2_->setWidth(halfWidth, 0);
-	myInput2_->setPosition(x + halfWidth, y + 20);
-
-	myInput3_ = new ofxDatGuiTextInput("text input", "# open frameworks #");
-	myInput3_->setWidth(halfWidth, 0);
-	myInput3_->setPosition(x + halfWidth, y + 40);
-
-	myInput4_ = new ofxDatGuiTextInput("text input", "# open frameworks #");
-	myInput4_->setWidth(halfWidth, 0);
-	myInput4_->setPosition(x + halfWidth, y+ 60);*/
 }
 
 MediaViewer::MediaViewer(int x_, int y_, int width_, int height_, int infoHeight_ )
@@ -64,7 +48,25 @@ MediaViewer::MediaViewer(int x_, int y_, int width_, int height_, int infoHeight
 	height = height_ - infoHeight;
 	width = width_;
 
-	infoPanel = InfoPanel(x, y + height, width, infoHeight);
+	int dif = 25;
+
+	play = new ofxDatGuiButton("play");
+	play->setPosition(x , y + height);
+	play->setWidth(maxWidth/3, 0.0f);
+	play->setHeight(25);
+
+	pause = new ofxDatGuiButton("pause");
+	pause->setPosition(x+ maxWidth/3, y + height);
+	pause->setWidth(maxWidth / 3, 0.0f);
+	pause->setHeight(25);
+
+	stop = new ofxDatGuiButton("stop");
+	stop->setPosition(x + (maxWidth / 3)+ (maxWidth / 3), y + height);
+	stop->setWidth(maxWidth / 3, 0.0f);
+	stop->setHeight(25);
+	
+
+	infoPanel = InfoPanel(x, y + height+dif, width, infoHeight);
 }
 
 void  MediaViewer::setInfoPanel(Component component)
