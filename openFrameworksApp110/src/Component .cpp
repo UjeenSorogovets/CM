@@ -22,14 +22,14 @@ int Component::countFaces(cv::Mat &frame)
 	return faces.size();
 }
 
-ofFloatColor Component::getColor(cv::Mat &img)
+ofColor Component::getColor(cv::Mat &img)
 {
 	cv::Scalar s = cv::mean(img);
 	cout << s << endl;
-	return ofFloatColor(s.val[0], s.val[1], s.val[2], s.val[3]);
+	return ofColor(s.val[0], s.val[1], s.val[2], s.val[3]);
 }
 
-double Component::getLum(cv::Mat &img)
+int Component::getLum(cv::Mat &img)
 {
 	cv::Mat gray;
 	cv::cvtColor(img, gray, CV_BGR2GRAY);

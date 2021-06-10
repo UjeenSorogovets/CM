@@ -14,24 +14,28 @@ InfoPanel::InfoPanel(int x_, int y_, int width_, int height_)
 
 	auto halfWidth = width / 2;
 
-	myInput = new ofxDatGuiTextInput("text input", "# open frameworks #");
+	myInput = new ofxDatGuiTextInput("Path", "####");
 	myInput->setWidth(width, 0);
 	myInput->setPosition(x, y);
 
 
-	myInput2 = new ofxDatGuiTextInput("text input 2", "# open frameworks #");
+	myInput2 = new ofxDatGuiTextInput("Color", "####");
 	myInput2->setWidth(width, 0);
 	myInput2->setPosition(x, y + 20);
 
 
-	myInput3 = new ofxDatGuiTextInput("text input 3", "# open frameworks #");
+	myInput3 = new ofxDatGuiTextInput("Luminescence", "####");
 	myInput3->setWidth(width, 0);
 	myInput3->setPosition(x, y + 40);
 
 
-	myInput4 = new ofxDatGuiTextInput("text input 4", "# open frameworks #");
+	myInput4 = new ofxDatGuiTextInput("Face count", "####");
 	myInput4->setWidth(width, 0);
 	myInput4->setPosition(x, y + 60);
+
+	myInput5 = new ofxDatGuiTextInput("Rythm", "####");
+	myInput5->setWidth(width, 0);
+	myInput5->setPosition(x, y + 80);
 
 }
 
@@ -73,7 +77,19 @@ void  MediaViewer::setInfoPanel(Component component)
 {
 	auto metaData = component.metaData;
 
+
 	infoPanel.myInput->setText(metaData.contentPath.string());
-	infoPanel.myInput2->setText("2");
-	
+	infoPanel.myInput2->setText(
+		"["+to_string( metaData.meanColor[0]*255)+
+		", " + to_string(metaData.meanColor[1] * 255) +
+		", " + to_string(metaData.meanColor[1] * 255) + "]"
+	);
+
+	infoPanel.myInput2->setBackgroundColor(metaData.meanColor);
+	infoPanel.myInput2->setLabelColor(metaData.meanColor.getInverted());
+
+	infoPanel.myInput3->setText(to_string(metaData.meanLuminacance));
+	infoPanel.myInput4->setText(to_string(metaData.faceCount));
+	infoPanel.myInput5->setText(to_string(metaData.videoRythm));
+
 }

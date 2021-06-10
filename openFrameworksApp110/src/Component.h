@@ -32,8 +32,8 @@ public:
 	bool fetchXml();
 	private:
 
-		ofFloatColor getColor(cv::Mat &img);
-		double getLum(cv::Mat &img);
+		ofColor getColor(cv::Mat &img);
+		int getLum(cv::Mat &img);
 		void getFrames(cv::Mat *frame, double &rythm, const string path, const ComponentType type);
 		void getType();
 		int countFaces(cv::Mat &frame);
