@@ -53,21 +53,18 @@ void ofApp::mousePressed(int x, int y, int button) {
 	if (inHorizontalPanelCondition)
 	{
 		choosedButtonNumber = catchMediaButton(x, y, &horizontalPanel);
-		//cout << "choosedButtonNumber = " << choosedButtonNumber << endl;
 	}
 	else if (leftViewerCondition)
 	{
-		//cout << "leftViewerCondition click!" << endl;
 		playPausePlayer(&leftViewer,button);
 	}
 	else if (rightViewerCondition)
 	{
-		//cout << "rightViewerCondition click!" << endl;
 		playPausePlayer(&rightViewer, button);
 	}
 	else
 	{
-		//cout << "mousePressed for nothing" << endl;
+		
 	}
 }
 
@@ -102,8 +99,6 @@ void ofApp::mouseReleased(int x, int y, int button) {
 
 		x = mouseX;
 		y = mouseY;
-		//cout << x << endl;
-		//cout << y << endl;
 
 
 		bool topDeleteCondition    = deleteCondition(x, y, 0, 0, globalWidth, 20);
@@ -116,6 +111,20 @@ void ofApp::mouseReleased(int x, int y, int button) {
 		if (anyOfDeleteConditions)
 		{
 			cout << "DELETE" << endl;
+			for (int i = 0; i < allComponents.size(); i++)
+			{
+				for (int j = 0; j < horizontalPanel.components.size(); j++)
+				{
+					if (allComponents[i].component == horizontalPanel.components[j].component)
+					{
+						//cout << "\n\nFOUND!" << endl;
+						allComponents.erase(allComponents.begin() + i);
+						i += 100;
+						j += 100;
+					}
+				}
+				
+			}
 			horizontalPanel.components.erase(horizontalPanel.components.begin() + res);
 			
 			auto newComponents = horizontalPanel.components;
@@ -234,17 +243,11 @@ void ofApp::setup()
 	leftViewer = MediaViewer(250, 180, 800 - (widthDif / 2), 800 - (heightDif / 1.25));
 	rightViewer = MediaViewer(1050 - (widthDif / 2), 180, 800 - (widthDif / 2), 800 - (heightDif / 1.25));
 
-	verticalPanel.startPosX = 60;
+	verticalPanel.startPosX = 30;
 	verticalPanel.startPosY = 150;
 	verticalPanel.offsetX = 0;
 	verticalPanel.offsetY = 10;
 	verticalPanel.horizontal = false;
-
-	/*for (int i = 0; i < 4; i++)
-	{
-		auto x = createFilterButton(this, "Default");
-		verticalPanel.push(x);
-	}*/
 
 	verticalPanel.push(createFilterButton(this, "Default"));
 	verticalPanel.push(createFilterButton(this, "Only Image", onlyImages));

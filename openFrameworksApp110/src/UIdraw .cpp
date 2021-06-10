@@ -55,20 +55,7 @@ bool inViewerCondition(int x, int y, MediaViewer* mediaViewer)
 	return condition;
 }
 
-FilterComponent createFilterButton(ofApp* ofApp, string label)
-{
-	FilterComponent component;
 
-	component.component = new ofxDatGuiButton(label);
-	component.path = label;
-	component.type = FILTER;
-	component.component->onButtonEvent(ofApp, &ofApp::onFilterClick);
-	component.width = 100;
-	component.index = component.component->getIndex();
-
-	return component;
-	//
-}
 
 FilterComponent createFilterButton(ofApp* ofApp, string label, std::function<vector<Component>(vector<Component>)> filterFunc)
 {
@@ -78,12 +65,29 @@ FilterComponent createFilterButton(ofApp* ofApp, string label, std::function<vec
 	component.path = label;
 	component.type = FILTER;
 	component.component->onButtonEvent(ofApp, &ofApp::onFilterClick);
-	component.width = 100;
+	component.width = 150;
+	component.height = 50;
 	component.index = component.component->getIndex();
 	component.filterFunc = filterFunc;
 
 	return component;
 	//std::function<void(vector<Component>)> filterFunc
+}
+
+FilterComponent createFilterButton(ofApp* ofApp, string label)
+{
+	FilterComponent component;
+
+	component.component = new ofxDatGuiButton(label);
+	component.path = label;
+	component.type = FILTER;
+	component.component->onButtonEvent(ofApp, &ofApp::onFilterClick);
+	component.width = 150;
+	component.height = 50;
+	component.index = component.component->getIndex();
+
+	return component;
+	//
 }
 
 Component createMediaButton(ofApp* ofApp, string defaultPath)

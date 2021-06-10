@@ -30,8 +30,8 @@ public:
 	int startPosX;
 	int startPosY;
 
-	int componentHeight = 100;
-	int componentWidth = 100;
+	int componentHeight = 50;
+	int componentWidth = 180;
 
 	int offsetX;
 	int offsetY;
