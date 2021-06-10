@@ -179,8 +179,6 @@ void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
 		auto mediaType = horizontalPanel.components[res].type;
 		if (mediaType == IMAGE)
 		{
-			//cout << "IMAGE" << endl;
-			//stop video if get image
 			mediaViewer->videoPlayer.stop();
 
 			mediaViewer->isImageNow = true;
@@ -191,8 +189,6 @@ void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
 		}
 		else if (mediaType == VIDEO)
 		{
-			//cout << "VIDEO" << endl;
-
 			mediaViewer->isImageNow = false;
 			mediaViewer->videoPlayer.load(horizontalPanel.components[res].path);
 			mediaViewer->videoPlayer.play();
@@ -203,6 +199,9 @@ void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
 		{
 			cout << "FILTER OR OTHER" << endl;
 		}
+		cout << "setInfoPanel" << endl;
+
+		mediaViewer->setInfoPanel(horizontalPanel.components[res]);
 	}
 	catch (std::invalid_argument e) {
 		cout << "Caught Invalid Argument Exception\n";

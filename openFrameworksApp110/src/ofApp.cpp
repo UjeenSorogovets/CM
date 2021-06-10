@@ -84,8 +84,8 @@ void ofApp::mouseReleased(int x, int y, int button) {
 
 		int res = choosedButtonNumber;
 
-			x = mouseX;
-			y = mouseY;
+		x = mouseX;
+		y = mouseY;
 		//cout << x << endl;
 		//cout << y << endl;
 
@@ -94,12 +94,10 @@ void ofApp::mouseReleased(int x, int y, int button) {
 
 		if (leftViewerCondition)
 		{
-			//cout << "leftMedia" << endl;
 			runInCurrentPlayer(&leftViewer, res);
 		}
 		else if (rightViewerCondition)
 		{
-			//cout << "rightMedia" << endl;
 			runInCurrentPlayer(&rightViewer, res);
 		}
 		else
@@ -173,6 +171,11 @@ void ofApp::setup()
 	component->setOpacity(0.0f);
 	components.push_back(component);
 
+	component = new ofxDatGuiFRM();
+	component->setPosition(0, 0);
+	component->setHeight(20);
+	components.push_back(component);
+
 	/*component = new ofxDatGuiButton("+");
 	component->setPosition(x + 20, 800);
 	component->setWidth(100, 0.0f);
@@ -207,14 +210,13 @@ void ofApp::setup()
 	verticalPanel.push(createFilterButton(this, "Only Video", onlyVideo));
 	verticalPanel.push(createFilterButton(this, "Only First", onlyFirstComponent));
 
-
 	auto currentPath = fs::current_path().string() + "\\src\\videos\\";
 
 	addMediaClickByPath(currentPath + "video3.mp4");
 	addMediaClickByPath(currentPath + "video2.mp4");
 	addMediaClickByPath(currentPath + "img1.png");
 	addMediaClickByPath(currentPath + "img2.jpg");
-
+	
 	//rightViewer.imagePlayer.load("C:/Users/GAD/Desktop/image_2021-05-12_10-24-07.png");
 	using namespace std::placeholders;
 
@@ -273,7 +275,6 @@ void drawAll(FiltersPanel componentPanel)
 	for (int i = 0; i < componentPanel.components.size(); i++)
 	{
 		FilterComponent currentComponent = componentPanel.components[i];
-		drawAll(currentComponent);
 	}
 }
 
@@ -283,6 +284,12 @@ void drawAll(MediaViewer mediaViewer)
 	mediaViewer.infoPanel.myInput2->draw();
 	mediaViewer.infoPanel.myInput3->draw();
 	mediaViewer.infoPanel.myInput4->draw();
+
+
+	//mediaViewer.infoPanel.myInput_->draw();
+	//mediaViewer.infoPanel.myInput2_->draw();
+	//mediaViewer.infoPanel.myInput3_->draw();
+	//mediaViewer.infoPanel.myInput4_->draw();
 
 	if (mediaViewer.isImageNow)
 	{

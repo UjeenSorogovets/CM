@@ -183,6 +183,7 @@
     <ClCompile Include="src\Component .cpp" />
     <ClCompile Include="src\ComponentPanel.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MediaViewer.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxOpenCv\src\ofxCvColorImage.cpp" />
     <ClCompile Include="..\..\..\..\..\..\of_v0.11.2_vs2017_release\addons\ofxOpenCv\src\ofxCvContourFinder.cpp" />
