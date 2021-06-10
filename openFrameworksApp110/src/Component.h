@@ -31,6 +31,10 @@ public:
 
 	bool fetchXml();
 	private:
+
+		ofFloatColor getColor(cv::Mat *img);
+		double getLum(cv::Mat &img);
+		void getFrames(cv::Mat *frame, double &rythm, const string path, const ComponentType type);
 		void getType();
 };
 

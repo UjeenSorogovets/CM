@@ -1,25 +1,26 @@
 #include "Component.h"
 
-
-ofFloatColor getColor(cv::Mat &img)
+using namespace std;
+ofFloatColor Component::getColor(cv::Mat *img)
 {
-	cv::Scalar s = mean(img);
-	return ofFloatColor(s.val[0], s.val[1], s.val[3], s.val[4]);
+	cv::Scalar s = cv::mean(*img);
+	cout << s << endl;
+	return ofFloatColor(s.val[0], s.val[1], s.val[2], s.val[3]);
 }
 
-double getLum(cv::Mat &img)
+double Component::getLum(cv::Mat &img)
 {
 	cv::Mat gray;
 	cv::cvtColor(img, gray, CV_BGR2GRAY);
-	return (getColor(gray))[0];
+	return (getColor(&gray))[0];
 }
 
-void getFrames(vector<cv::Mat> &frames, double &rythm,  const string path, const ComponentType type)
+void Component::getFrames(cv::Mat *_frame, double &rythm,  const string path, const ComponentType type)
 {
 
 	if (type == IMAGE)
 	{
-		frames.push_back(cv::Mat(ofxCv::toCv(ofImage(path))));
+		*_frame= cv::Mat(ofxCv::toCv(ofImage(path)));
 	}
 	if (type ==  VIDEO)
 	{
@@ -34,6 +35,7 @@ void getFrames(vector<cv::Mat> &frames, double &rythm,  const string path, const
 			return;
 		}
 		cout << "[Video] " << fps << " "<< framesN<<endl;
+		int k = 0;
 		for (size_t i = 0; i < framesN; i++)
 		{
 			cv::Mat frame;
@@ -69,7 +71,8 @@ void getFrames(vector<cv::Mat> &frames, double &rythm,  const string path, const
 				double histMean = (cv::mean(diff[0]).val[0] + cv::mean(diff[1]).val[0] + cv::mean(diff[2]).val[0]) / 3;
 				if (prevHistMean / histMean < 0.1)
 				{
-					frames.push_back(frame);
+					*_frame = frame;
+					k++;
 				}
 				prevHistMean = histMean;
 			}
@@ -78,9 +81,12 @@ void getFrames(vector<cv::Mat> &frames, double &rythm,  const string path, const
 			prevHist[2] = hist[2];
 		}
 		cap.release();
-		//frames.push_back(cv::Mat(ofxCv::toCv(player.getPixels())));
-		rythm = frames.size()/(framesN/fps) ;
+		//frames->push_back(cv::Mat(ofxCv::toCv(player.getPixels())));
+
+		rythm =k/(framesN/fps) ;
+
 	}
+
 }
 
 void Component::getType()
@@ -118,12 +124,16 @@ bool Component::fetchXml()
 		metaData.xmlPath = baseXmlPath / (metaData.contentPath.filename().replace_extension("xml"));
 		getType(); 
 		metaData.type = type;
-		vector<cv::Mat> frames;
+		cv::Mat frame;
 		double rythm;
-		getFrames(frames, metaData.videoRythm, metaData.contentPath.string(), metaData.type);
-		metaData.meanColor = getColor(frames[0]);
-		metaData.meanLuminacance = getLum(frames[0]);
+		getFrames(&frame, metaData.videoRythm, metaData.contentPath.string(), metaData.type);
+		cout <<frame.size() << endl;
+
 		cout << "[rythm]" << metaData.videoRythm << endl;
+		metaData.meanColor = getColor(&frame);
+		cout << "[lcolor]" << metaData.meanColor << endl;
+		//metaData.meanLuminacance = getLum(frame);
+		//cout << "[lum]" << metaData.meanLuminacance << endl;
 		if (metaData.xmlRoot.load(metaData.xmlPath))
 		{
 			ofXml mainNode = metaData.xmlRoot.getChild("component");
