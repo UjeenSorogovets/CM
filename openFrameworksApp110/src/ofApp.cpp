@@ -214,10 +214,10 @@ void ofApp::setup()
 
 	ofxDatGuiComponent* component;
 
-	component = new ofxDatGuiButton("+");
+	component = new ofxDatGuiButton("Add media");
 	component->setPosition(x + 20, y + 20);
-	component->setWidth(100, 0.0f);
-	component->setHeight(100);
+	component->setWidth(200, 0.0f);
+	component->setHeight(115);
 	component->onButtonEvent(this, &ofApp::addMediaClick);
 	component->setOpacity(0.0f);
 	components.push_back(component);
