@@ -1,8 +1,20 @@
 #include "Component.h"
 
 
+ofFloatColor getColor(cv::Mat &img)
+{
+	cv::Scalar s = mean(img);
+	return ofFloatColor(s.val[0], s.val[1], s.val[3], s.val[4]);
+}
 
-void getFrames(vector<cv::Mat> &frames, double &rythm, vector<ofColor>  &colors,  const string path, const ComponentType type)
+double getLum(cv::Mat &img)
+{
+	cv::Mat gray;
+	cv::cvtColor(img, gray, CV_BGR2GRAY);
+	return (getColor(gray))[0];
+}
+
+void getFrames(vector<cv::Mat> &frames, double &rythm,  const string path, const ComponentType type)
 {
 
 	if (type == IMAGE)
@@ -106,10 +118,11 @@ bool Component::fetchXml()
 		metaData.xmlPath = baseXmlPath / (metaData.contentPath.filename().replace_extension("xml"));
 		getType(); 
 		metaData.type = type;
-
 		vector<cv::Mat> frames;
 		double rythm;
 		getFrames(frames, metaData.videoRythm, metaData.contentPath.string(), metaData.type);
+		metaData.meanColor = getColor(frames[0]);
+		metaData.meanLuminacance = getLum(frames[0]);
 		cout << "[rythm]" << metaData.videoRythm << endl;
 		if (metaData.xmlRoot.load(metaData.xmlPath))
 		{

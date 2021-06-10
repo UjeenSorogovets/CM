@@ -31,7 +31,6 @@ public:
 
 	bool fetchXml();
 	private:
-		std::vector<ofColor> getColors();
 		void getType();
 };
 
