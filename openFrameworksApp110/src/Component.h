@@ -30,6 +30,9 @@ public:
 	MetaData metaData;
 
 	bool fetchXml();
+	private:
+		std::vector<ofColor> getColors();
+		void getType();
 };
 
 vector<Component> withoutFilter(vector<Component>& components);

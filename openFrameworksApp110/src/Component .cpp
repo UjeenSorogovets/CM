@@ -1,11 +1,116 @@
 #include "Component.h"
 
+
+
+void getFrames(vector<cv::Mat> &frames, double &rythm, vector<ofColor>  &colors,  const string path, const ComponentType type)
+{
+
+	if (type == IMAGE)
+	{
+		frames.push_back(cv::Mat(ofxCv::toCv(ofImage(path))));
+	}
+	if (type ==  VIDEO)
+	{
+		cv::VideoCapture cap(path);
+		double fps = cap.get(cv::CAP_PROP_FPS);
+		int framesN = cap.get(cv::CAP_PROP_FRAME_COUNT);
+		cv::Mat prevHist[3];
+		double prevHistMean = 0;
+		if (!cap.isOpened())
+		{
+			cout << "Video read error" << endl;
+			return;
+		}
+		cout << "[Video] " << fps << " "<< framesN<<endl;
+		for (size_t i = 0; i < framesN; i++)
+		{
+			cv::Mat frame;
+			cap.read(frame);
+			if (frame.empty())
+			{
+				cout << "empty frame "<<i << endl;
+				break;
+			}
+
+			//cout << "[hist mean] " << cv::mean(frame) << endl;
+			//ofxCv::drawMat(frame,0,0);
+			//cv::Mat hist; 
+			const int channels = 0;
+			const int histSize = 255;
+			const float range[] = { 0, 256 };
+			const float* histRange = { range };
+
+			vector<cv::Mat> bgr_planes;
+			cv::split(frame, bgr_planes);
+			cv::Mat hist[3];
+			cv::calcHist( &bgr_planes[0], 1, 0, cv::Mat(), hist[0], 1, &histSize, &histRange, true, false);
+			cv::calcHist(&bgr_planes[1], 1, 0, cv::Mat(), hist[1], 1, &histSize, &histRange, true, false);
+			cv::calcHist(&bgr_planes[2], 1, 0, cv::Mat(), hist[2], 1, &histSize, &histRange, true, false);
+			//cout << "[hist mean]" << cv::mean(hist[0]) << endl;
+			if (!prevHist[0].empty())
+			{
+				
+				cv::Mat diff[3];
+				cv::absdiff(hist[0], prevHist[0], diff[0]);
+				cv::absdiff(hist[1], prevHist[1], diff[1]);
+				cv::absdiff(hist[2], prevHist[2], diff[2]);
+				double histMean = (cv::mean(diff[0]).val[0] + cv::mean(diff[1]).val[0] + cv::mean(diff[2]).val[0]) / 3;
+				if (prevHistMean / histMean < 0.1)
+				{
+					frames.push_back(frame);
+				}
+				prevHistMean = histMean;
+			}
+			prevHist[0] = hist[0];
+			prevHist[1] = hist[1];
+			prevHist[2] = hist[2];
+		}
+		cap.release();
+		//frames.push_back(cv::Mat(ofxCv::toCv(player.getPixels())));
+		rythm = frames.size()/(framesN/fps) ;
+	}
+}
+
+void Component::getType()
+{
+	ofVideoPlayer player;
+
+	if (image.load(path))
+	{
+		cout << "added image" << endl;
+		this->type = IMAGE;
+	}
+	else
+	{
+		if (player.load(path)) {
+			cout << "added video" << endl;
+			this->type = VIDEO;
+			player.play();
+			player.setPaused(true);
+			auto x = player.getPixels();
+			image.setFromPixels(x);
+		}
+		else
+		{
+			cout << "error open file" << endl;
+			this->type = UNKNOWN;
+		}
+	}
+	this->image = image;
+}
+
 bool Component::fetchXml()
 	{
-
+	//cout << "[fetchXml]" << endl;
 		metaData.contentPath = path;
 		metaData.xmlPath = baseXmlPath / (metaData.contentPath.filename().replace_extension("xml"));
+		getType(); 
+		metaData.type = type;
 
+		vector<cv::Mat> frames;
+		double rythm;
+		getFrames(frames, metaData.videoRythm, metaData.contentPath.string(), metaData.type);
+		cout << "[rythm]" << metaData.videoRythm << endl;
 		if (metaData.xmlRoot.load(metaData.xmlPath))
 		{
 			ofXml mainNode = metaData.xmlRoot.getChild("component");
@@ -20,6 +125,7 @@ bool Component::fetchXml()
 				metaData.type = VIDEO;
 			}
 
+
 			ofXml sizeNode = mainNode.getChild("size");
 			metaData.size.x = sizeNode.getChild("w").getIntValue();
 			metaData.size.y = sizeNode.getChild("h").getIntValue();
@@ -29,6 +135,7 @@ bool Component::fetchXml()
 		{
 			metaData.type = type;
 			metaData.size = ofVec2f(image.getWidth(), image.getHeight());
+
 			////////
 			ofXml mainNode = metaData.xmlRoot.appendChild("component");
 			mainNode.appendChild("contentPath").set(metaData.contentPath);

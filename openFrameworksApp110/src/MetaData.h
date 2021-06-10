@@ -10,6 +10,7 @@ public:
 	ofXml xmlRoot;
 	ofVec2f size;
 	ComponentType type;
+	double videoRythm = 0;
 	std::filesystem::path contentPath;
 	std::filesystem::path xmlPath;
 
