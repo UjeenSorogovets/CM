@@ -5,6 +5,13 @@
 
 #include <functional>
 
+int globalWidth = 1366;
+int globalHeight = 768;
+//int globalWidth = 1920;
+//int globalHeight = 1080;
+int widthDif = 1920 - globalWidth;
+int heightDif = 1080 - globalHeight;
+
 void ofApp::mouseDragged(int x, int y, int button) {
 	if (choosedButtonNumber == -1)
 	{
@@ -33,13 +40,11 @@ void ofApp::mouseDragged(int x, int y, int button) {
 void ofApp::mousePressed(int x, int y, int button) {
 
 	cout << "[mousePressed] " << x << " " << y << " " << button << endl;
-	//cout << "mousePressed" << endl;
+
 	isMouseClicked = true;
-	//cout << "isMouseClicked = " << isMouseClicked << endl;
+
 	int horizntalPanelEndX = horizontalPanel.startPosX + horizontalPanel.componentWidth * (horizontalPanel.components.size()) + horizontalPanel.offsetX * (horizontalPanel.components.size() - 1);
 	int horizntalPanelEndY = horizontalPanel.startPosY + horizontalPanel.componentHeight;
-	//cout << "\nhorizntalPanelEndX = " << horizntalPanelEndX << endl;
-	//cout << "horizntalPanelEndY = " << horizntalPanelEndY << endl;
 
 	bool inHorizontalPanelCondition = (x >= horizontalPanel.startPosX && y >= horizontalPanel.startPosY && x <= horizntalPanelEndX && y <= horizntalPanelEndY);
 	bool leftViewerCondition = inViewerCondition(x, y, &leftViewer);
@@ -48,22 +53,30 @@ void ofApp::mousePressed(int x, int y, int button) {
 	if (inHorizontalPanelCondition)
 	{
 		choosedButtonNumber = catchMediaButton(x, y, &horizontalPanel);
-		//cout << "choosedButtonNumber = " << choosedButtonNumber << endl;
 	}
 	else if (leftViewerCondition)
 	{
-		//cout << "leftViewerCondition click!" << endl;
-		playPausePlayer(&leftViewer);
+		playPausePlayer(&leftViewer,button);
 	}
 	else if (rightViewerCondition)
 	{
-		//cout << "rightViewerCondition click!" << endl;
-		playPausePlayer(&rightViewer);
+		playPausePlayer(&rightViewer, button);
 	}
 	else
 	{
-		//cout << "mousePressed for nothing" << endl;
+		
 	}
+}
+
+bool deleteInBorder(int x, int y, int xD,int yD, int w, int h)
+{
+	return (x >= xD && y >= yD && x <= xD + w && y <= yD + h);
+}
+
+bool deleteCondition(int x,int y, int xD,int yD, int w,int h)
+{
+	return deleteInBorder(x,y,xD,yD,w,h) ? true : false;
+	
 }
 
 void ofApp::mouseReleased(int x, int y, int button) {
@@ -86,35 +99,72 @@ void ofApp::mouseReleased(int x, int y, int button) {
 
 		x = mouseX;
 		y = mouseY;
-		//cout << x << endl;
-		//cout << y << endl;
 
-		bool leftViewerCondition = inViewerCondition(x, y, &leftViewer);
-		bool rightViewerCondition = inViewerCondition(x, y, &rightViewer);
 
-		if (leftViewerCondition)
+		bool topDeleteCondition    = deleteCondition(x, y, 0, 0, globalWidth, 20);
+		bool leftDeleteCondition   = deleteCondition(x, y, 0, 0, 20, globalHeight);
+		bool rightDeleteCondition  = deleteCondition(x, y, 0, globalHeight - 20, globalWidth, 20);
+		bool bottomDeleteCondition = deleteCondition(x, y, globalWidth - 20, 0, 20, globalHeight);
+
+		bool anyOfDeleteConditions = topDeleteCondition || leftDeleteCondition || rightDeleteCondition || bottomDeleteCondition;
+
+		if (anyOfDeleteConditions)
 		{
-			runInCurrentPlayer(&leftViewer, res);
-		}
-		else if (rightViewerCondition)
-		{
-			runInCurrentPlayer(&rightViewer, res);
+			cout << "DELETE" << endl;
+			for (int i = 0; i < allComponents.size(); i++)
+			{
+				for (int j = 0; j < horizontalPanel.components.size(); j++)
+				{
+					if (allComponents[i].component == horizontalPanel.components[j].component)
+					{
+						//cout << "\n\nFOUND!" << endl;
+						allComponents.erase(allComponents.begin() + i);
+						i += 100;
+						j += 100;
+					}
+				}
+				
+			}
+			horizontalPanel.components.erase(horizontalPanel.components.begin() + res);
+			
+			auto newComponents = horizontalPanel.components;
+
+			//newComponents = currentComponent.filterFunc(newComponents);
+
+			int count = newComponents.size();
+			cout << "newComponents size = " << count << endl;
+			horizontalPanel.components.clear();
+			for (int i = 0; i < count; i++)
+			{
+				horizontalPanel.push(newComponents[i]);
+			}
+			
 		}
 		else
 		{
-			cout << "can't load!" << endl;
+			bool leftViewerCondition = inViewerCondition(x, y, &leftViewer);
+			bool rightViewerCondition = inViewerCondition(x, y, &rightViewer);
+
+			if (leftViewerCondition)
+			{
+				runInCurrentPlayer(&leftViewer, res);
+			}
+			else if (rightViewerCondition)
+			{
+				runInCurrentPlayer(&rightViewer, res);
+			}
+			else
+			{
+				cout << "can't load!" << endl;
+			}
 		}
+		
 
 		choosedButtonNumber = -1;
 	}
 }
 
-int globalWidth = 1366;
-int globalHeight = 768;
-//int globalWidth = 1920;
-//int globalHeight = 1080;
-int widthDif = 1920 - globalWidth;
-int heightDif = 1080 - globalHeight;
+
 
 vector<Component> onlyImages(vector<Component>& components)
 {
@@ -156,6 +206,7 @@ vector<Component> onlyFirstComponent(vector<Component>& components)
 	return components;
 }
 
+
 void ofApp::setup()
 {
 	ofSetWindowPosition(0, 0);
@@ -163,10 +214,10 @@ void ofApp::setup()
 
 	ofxDatGuiComponent* component;
 
-	component = new ofxDatGuiButton("+");
+	component = new ofxDatGuiButton("Add media");
 	component->setPosition(x + 20, y + 20);
-	component->setWidth(100, 0.0f);
-	component->setHeight(100);
+	component->setWidth(200, 0.0f);
+	component->setHeight(115);
 	component->onButtonEvent(this, &ofApp::addMediaClick);
 	component->setOpacity(0.0f);
 	components.push_back(component);
@@ -191,19 +242,19 @@ void ofApp::setup()
 	//
 
 	leftViewer = MediaViewer(250, 180, 800 - (widthDif / 2), 800 - (heightDif / 1.25));
+	leftViewer.play -> onButtonEvent(this, &ofApp::playEvent);
+	leftViewer.pause->onButtonEvent(this, &ofApp::pauseEvent);
+	leftViewer.stop->onButtonEvent(this, &ofApp::stopEvent);
 	rightViewer = MediaViewer(1050 - (widthDif / 2), 180, 800 - (widthDif / 2), 800 - (heightDif / 1.25));
+	rightViewer.play->onButtonEvent(this, &ofApp::playEvent);
+	rightViewer.pause->onButtonEvent(this, &ofApp::pauseEvent);
+	rightViewer.stop->onButtonEvent(this, &ofApp::stopEvent);
 
-	verticalPanel.startPosX = 60;
+	verticalPanel.startPosX = 30;
 	verticalPanel.startPosY = 150;
 	verticalPanel.offsetX = 0;
 	verticalPanel.offsetY = 10;
 	verticalPanel.horizontal = false;
-
-	/*for (int i = 0; i < 4; i++)
-	{
-		auto x = createFilterButton(this, "Default");
-		verticalPanel.push(x);
-	}*/
 
 	verticalPanel.push(createFilterButton(this, "Default"));
 	verticalPanel.push(createFilterButton(this, "Only Image", onlyImages));
@@ -227,6 +278,10 @@ void updateAll(MediaViewer* mediaViewer)
 {
 	mediaViewer->imagePlayer.update();
 	mediaViewer->videoPlayer.update();
+
+	mediaViewer->play->update();
+	mediaViewer->pause->update();
+	mediaViewer->stop->update();
 }
 
 void ofApp::update()
@@ -275,6 +330,7 @@ void drawAll(FiltersPanel componentPanel)
 	for (int i = 0; i < componentPanel.components.size(); i++)
 	{
 		FilterComponent currentComponent = componentPanel.components[i];
+		currentComponent.component->draw();
 	}
 }
 
@@ -285,7 +341,9 @@ void drawAll(MediaViewer mediaViewer)
 	mediaViewer.infoPanel.myInput3->draw();
 	mediaViewer.infoPanel.myInput4->draw();
 
-
+	mediaViewer.play->draw();
+	mediaViewer.pause->draw();
+	mediaViewer.stop->draw();
 	//mediaViewer.infoPanel.myInput_->draw();
 	//mediaViewer.infoPanel.myInput2_->draw();
 	//mediaViewer.infoPanel.myInput3_->draw();
@@ -329,6 +387,16 @@ void ofApp::draw()
 		ofDrawRectangle(leftViewer.startX, leftViewer.startY, leftViewer.maxWidth, leftViewer.maxHeight);
 
 		ofDrawRectangle(rightViewer.startX, rightViewer.startY, rightViewer.maxWidth, rightViewer.maxHeight);
+
+		// shorter notation is also possible
+		ofColor red(255, 0, 0);
+		ofSetColor(red);
+		ofFill();
+
+		ofDrawRectangle(0, 0, globalWidth, 20);
+		ofDrawRectangle(0, 0, 20, globalHeight);
+		ofDrawRectangle(globalWidth-20, 0, 20, globalHeight);
+		ofDrawRectangle(0, globalHeight-20, globalWidth, 20);
 	}
 
 
@@ -372,6 +440,27 @@ void ofApp::addMediaClickByPath(string path = "")
 	horizontalPanel.push(mediaButton);
 }
 
+void ofApp::playEvent(ofxDatGuiButtonEvent e)
+{
+	cout << "playEvent" << endl;
+	bool leftViewerCond = (mouseX <= leftViewer.startX + leftViewer.maxWidth);
+	MediaViewer mediaViewer = leftViewerCond ? leftViewer : rightViewer;
+	mediaViewer.videoPlayer.play();
+}
+void ofApp::pauseEvent(ofxDatGuiButtonEvent e)
+{
+	cout << "pauseEvent" << endl;
+	bool leftViewerCond = (mouseX <= leftViewer.startX + leftViewer.maxWidth);
+	MediaViewer mediaViewer = leftViewerCond ? leftViewer : rightViewer;
+	mediaViewer.videoPlayer.setPaused(true);
+}
+void ofApp::stopEvent(ofxDatGuiButtonEvent e)
+{
+	cout << "stopEvent" << endl;
+	bool leftViewerCond = (mouseX <= leftViewer.startX + leftViewer.maxWidth);
+	MediaViewer mediaViewer = leftViewerCond ? leftViewer : rightViewer;
+	mediaViewer.videoPlayer.stop();
+}
 void ofApp::addMediaClick(ofxDatGuiButtonEvent e)
 {
 	//cout << "addMediaClick" << endl;

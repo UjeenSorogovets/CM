@@ -77,7 +77,7 @@ void FiltersPanel::push(FilterComponent component)
 				}
 				else
 				{
-					component.startPosY = startPosY * (size + 1) + offsetY * (size);
+					component.startPosY = startPosY + component.height * (size)+offsetY * (size);
 				}
 				component.component->setPosition(component.startPosX, component.startPosY);
 			}
