@@ -23,7 +23,7 @@ Component createMediaButton(ofApp* ofApp, string defaultPath = "");
 
 void runInCurrentPlayer(MediaViewer* mediaViewer, int res);
 
-void playPausePlayer(MediaViewer* mediaViewer);
+void playPausePlayer(MediaViewer* mediaViewer, int button);
 
 int catchMediaButton(int x, int y, ComponentPanel* componentPanel);
 

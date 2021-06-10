@@ -208,12 +208,18 @@ void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
 	}
 }
 
-void playPausePlayer(MediaViewer* mediaViewer)
+void playPausePlayer(MediaViewer* mediaViewer, int button)
 {
 	if (!mediaViewer->isImageNow)
 	{
 		bool isPlaying = mediaViewer->videoPlayer.isPlaying();
-		if (isPlaying)
+		if (button == 2)
+		{
+			mediaViewer->videoPlayer.stop();
+			mediaViewer->videoPlayer.play();
+			mediaViewer->videoPlayer.setPaused(true);
+		}
+		else if (isPlaying)
 		{
 			mediaViewer->videoPlayer.setPaused(true);
 		}
