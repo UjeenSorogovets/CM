@@ -316,6 +316,7 @@ void drawAll(FiltersPanel componentPanel)
 	for (int i = 0; i < componentPanel.components.size(); i++)
 	{
 		FilterComponent currentComponent = componentPanel.components[i];
+		currentComponent.component->draw();
 	}
 }
 
