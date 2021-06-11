@@ -419,10 +419,10 @@ void ofApp::setup()
 
 	auto currentPath = fs::current_path().string() + "\\src\\videos\\";
 
-	addMediaClickByPath(currentPath + "video3.mp4");
+	/*addMediaClickByPath(currentPath + "video3.mp4");
 	addMediaClickByPath(currentPath + "video2.mp4");
 	addMediaClickByPath(currentPath + "img1.png");
-	addMediaClickByPath(currentPath + "img2.jpg");
+	addMediaClickByPath(currentPath + "img2.jpg");*/
 	
 	//rightViewer.imagePlayer.load("C:/Users/GAD/Desktop/image_2021-05-12_10-24-07.png");
 	using namespace std::placeholders;
