@@ -164,7 +164,31 @@ void ofApp::mouseReleased(int x, int y, int button) {
 	}
 }
 
+vector<Component> onlyBright(vector<Component>& components)
+{
+	for (int i = 0; i < components.size(); i++)
+	{
+		if (components[i].metaData.meanLuminacance <= 127)
+		{
+			components.erase(components.begin() + i);
+			i--;
+		}
+	}
+	return components;
+}
 
+vector<Component> onlyDim(vector<Component>& components)
+{
+	for (int i = 0; i < components.size(); i++)
+	{
+		if (components[i].metaData.meanLuminacance >= 127)
+		{
+			components.erase(components.begin() + i);
+			i--;
+		}
+	}
+	return components;
+}
 
 vector<Component> onlyImages(vector<Component>& components)
 {
@@ -203,6 +227,33 @@ vector<Component> onlyFirstComponent(vector<Component>& components)
 		i--;
 	}
 
+	return components;
+}
+
+
+vector<Component> onlyFaces(vector<Component>& components)
+{
+	for (int i = 0; i < components.size(); i++)
+	{
+		if (components[i].metaData.faceCount <= 0)
+		{
+			components.erase(components.begin() + i);
+			i--;
+		}
+	}
+	return components;
+}
+
+vector<Component> onlyWithoutFaces(vector<Component>& components)
+{
+	for (int i = 0; i < components.size(); i++)
+	{
+		if (components[i].metaData.faceCount > 0)
+		{
+			components.erase(components.begin() + i);
+			i--;
+		}
+	}
 	return components;
 }
 
@@ -260,6 +311,10 @@ void ofApp::setup()
 	verticalPanel.push(createFilterButton(this, "Only Image", onlyImages));
 	verticalPanel.push(createFilterButton(this, "Only Video", onlyVideo));
 	verticalPanel.push(createFilterButton(this, "Only First", onlyFirstComponent));
+	verticalPanel.push(createFilterButton(this, "Only Bright", onlyBright));
+	verticalPanel.push(createFilterButton(this, "Only Dim", onlyDim));
+	verticalPanel.push(createFilterButton(this, "Only with faces", onlyFaces));
+	verticalPanel.push(createFilterButton(this, "Only Without Faces", onlyWithoutFaces));
 
 	auto currentPath = fs::current_path().string() + "\\src\\videos\\";
 
@@ -340,6 +395,9 @@ void drawAll(MediaViewer mediaViewer)
 	mediaViewer.infoPanel.myInput2->draw();
 	mediaViewer.infoPanel.myInput3->draw();
 	mediaViewer.infoPanel.myInput4->draw();
+	mediaViewer.infoPanel.myInput5->draw();
+	mediaViewer.infoPanel.myInput6->draw();
+	//(ofxDatGuiTimeGraph)(*(mediaViewer.infoPanel.myPlotter))->draw();
 
 	mediaViewer.play->draw();
 	mediaViewer.pause->draw();

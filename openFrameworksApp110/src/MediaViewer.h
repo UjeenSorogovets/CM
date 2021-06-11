@@ -21,6 +21,8 @@ public:
 	ofxDatGuiTextInput* myInput3;
 	ofxDatGuiTextInput* myInput4;
 	ofxDatGuiTextInput* myInput5;
+	ofxDatGuiTextInput* myInput6;
+	//ofxDatGuiValuePlotter* myPlotter;
 
 	InfoPanel()
 	{

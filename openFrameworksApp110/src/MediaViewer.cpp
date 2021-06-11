@@ -37,9 +37,17 @@ InfoPanel::InfoPanel(int x_, int y_, int width_, int height_)
 	myInput5->setWidth(width, 0);
 	myInput5->setPosition(x, y + 80);
 
+	myInput6 = new ofxDatGuiTextInput("edge histogramm", "####");
+	myInput6->setWidth(width, 0);
+	myInput6->setPosition(x, y + 100);
+
+	//myPlotter = new ofxDatGuiValuePlotter("edge histogramm", 0, 255);
+	//myPlotter->setWidth(width, 0);
+	//myPlotter->setPosition(x, y + 120);
+
 }
 
-MediaViewer::MediaViewer(int x_, int y_, int width_, int height_, int infoHeight_ )
+MediaViewer::MediaViewer(int x_, int y_, int width_, int height_, int infoHeight_)
 {
 	infoHeight = infoHeight_;
 
@@ -55,22 +63,22 @@ MediaViewer::MediaViewer(int x_, int y_, int width_, int height_, int infoHeight
 	int dif = 25;
 
 	play = new ofxDatGuiButton("play");
-	play->setPosition(x , y + height);
-	play->setWidth(maxWidth/3, 0.0f);
+	play->setPosition(x, y + height);
+	play->setWidth(maxWidth / 3, 0.0f);
 	play->setHeight(25);
 
 	pause = new ofxDatGuiButton("pause");
-	pause->setPosition(x+ maxWidth/3, y + height);
+	pause->setPosition(x + maxWidth / 3, y + height);
 	pause->setWidth(maxWidth / 3, 0.0f);
 	pause->setHeight(25);
 
 	stop = new ofxDatGuiButton("stop");
-	stop->setPosition(x + (maxWidth / 3)+ (maxWidth / 3), y + height);
+	stop->setPosition(x + (maxWidth / 3) + (maxWidth / 3), y + height);
 	stop->setWidth(maxWidth / 3, 0.0f);
 	stop->setHeight(25);
-	
 
-	infoPanel = InfoPanel(x, y + height+dif, width, infoHeight);
+
+	infoPanel = InfoPanel(x, y + height + dif, width, infoHeight);
 }
 
 void  MediaViewer::setInfoPanel(Component component)
@@ -80,7 +88,7 @@ void  MediaViewer::setInfoPanel(Component component)
 
 	infoPanel.myInput->setText(metaData.contentPath.string());
 	infoPanel.myInput2->setText(
-		"["+to_string( metaData.meanColor[0]*255)+
+		"[" + to_string(metaData.meanColor[0] * 255) +
 		", " + to_string(metaData.meanColor[1] * 255) +
 		", " + to_string(metaData.meanColor[1] * 255) + "]"
 	);
@@ -91,5 +99,16 @@ void  MediaViewer::setInfoPanel(Component component)
 	infoPanel.myInput3->setText(to_string(metaData.meanLuminacance));
 	infoPanel.myInput4->setText(to_string(metaData.faceCount));
 	infoPanel.myInput5->setText(to_string(metaData.videoRythm));
+	infoPanel.myInput6->setText("[" +
+		to_string(metaData.edgeHistogramm[0]) + ", " +
+		to_string(metaData.edgeHistogramm[1]) + ", " +
+		to_string(metaData.edgeHistogramm[2]) + ", " +
+		to_string(metaData.edgeHistogramm[3]) + ", " +
+		to_string(metaData.edgeHistogramm[4]) + "]"
+	);
+
+	/*infoPanel.myPlotter->setValue(55);
+	infoPanel.myPlotter->setValue(5);
+	infoPanel.myPlotter->setValue(105);*/
 
 }

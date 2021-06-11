@@ -14,6 +14,7 @@ public:
 	double meanLuminacance;
 	double videoRythm = 0;
 	int faceCount = 0;
+	vector<double> edgeHistogramm;
 	std::filesystem::path contentPath;
 	std::filesystem::path xmlPath;
 

@@ -37,6 +37,7 @@ public:
 		void getFrames(cv::Mat *frame, double &rythm, const string path, const ComponentType type);
 		void getType();
 		int countFaces(cv::Mat &frame);
+		vector<double> getEdgeHist(cv::Mat &frame);
 };
 
 vector<Component> withoutFilter(vector<Component>& components);
