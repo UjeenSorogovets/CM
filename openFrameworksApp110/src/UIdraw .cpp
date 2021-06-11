@@ -29,7 +29,7 @@ void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaType)
 	if (width > height)
 	{
 		//cout << "width>height" << endl;
-		mediaViewer->height = maxHeight / (width / height);
+		mediaViewer->height = height * maxWidth / width; //maxHeight / (width / height);
 		mediaViewer->width = maxWidth;
 
 		mediaViewer->y = mediaViewer->startY + (maxHeight - mediaViewer->height) / 2;
@@ -39,7 +39,7 @@ void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaType)
 	{
 		//cout << "width<height" << endl;
 		mediaViewer->height = maxHeight;
-		mediaViewer->width = maxWidth * (width / height);
+		mediaViewer->width = maxHeight * (width / height);
 
 		mediaViewer->y = mediaViewer->startY;
 		mediaViewer->x = mediaViewer->startX + (maxWidth - mediaViewer->width) / 2;
@@ -130,8 +130,7 @@ void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
 			mediaViewer->videoPlayer.stop();
 
 			mediaViewer->isImageNow = true;
-			auto img = horizontalPanel.components[res].image;
-			mediaViewer->imagePlayer = img;
+			mediaViewer->imagePlayer.load(horizontalPanel.components[res].path);
 
 			resizePlayerToMedia(mediaViewer, mediaType);
 		}

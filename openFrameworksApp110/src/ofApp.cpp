@@ -4,6 +4,7 @@
 #include <filesystem>
 
 #include <functional>
+#include "opencv2/features2d.hpp"
 
 int globalWidth = 1366;
 int globalHeight = 768;
@@ -168,7 +169,7 @@ vector<Component> onlyBright(vector<Component>& components)
 {
 	for (int i = 0; i < components.size(); i++)
 	{
-		if (components[i].metaData.meanLuminacance <= 127)
+		if (components[i].metaData.meanLuminacance < 85)
 		{
 			components.erase(components.begin() + i);
 			i--;
@@ -181,7 +182,7 @@ vector<Component> onlyDim(vector<Component>& components)
 {
 	for (int i = 0; i < components.size(); i++)
 	{
-		if (components[i].metaData.meanLuminacance >= 127)
+		if (components[i].metaData.meanLuminacance > 85)
 		{
 			components.erase(components.begin() + i);
 			i--;
@@ -210,6 +211,105 @@ vector<Component> onlyVideo(vector<Component>& components)
 	for (int i = 0; i < components.size(); i++)
 	{
 		if (components[i].type != VIDEO)
+		{
+			components.erase(components.begin() + i);
+			i--;
+		}
+	}
+
+	return components;
+}
+
+
+vector<Component> onlyWithObject(vector<Component>& components)
+{
+	cout << "onlyWithObject!!" << endl;
+
+	ofFileDialogResult result = ofSystemLoadDialog("Load file");
+	string path = "";
+	if (result.bSuccess)
+	{
+		path = result.getPath();
+	}
+	else
+	{
+		return components;
+	}
+	cv::Mat src = cv::imread(path);
+	if (src.empty())
+	{
+		return components;
+	}
+	cv::Ptr< cv::ORB> detector;
+	detector = cv::ORB::create();
+
+	std::vector<cv::KeyPoint> keypoints1;
+	cv::Mat descriptors1;
+	detector->detectAndCompute(src, cv::noArray(), keypoints1, descriptors1);
+
+	cout << "[kpq]" <<keypoints1.size()<< endl;
+	cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::BRUTEFORCE);
+
+	for (int i = 0; i < components.size(); i++)
+	{
+		cv::Mat dst;
+		if (components[i].type == VIDEO)
+		{
+			cv::VideoCapture cap(path);
+			if (!cap.isOpened())
+			{
+				cout << "Video read error" << endl;
+				return components;
+			}
+			cap.read(dst);
+			cap.release();
+		}
+		if (components[i].type == IMAGE)
+		{
+			dst	= cv::imread(components[i].path);
+		}
+
+		if (dst.empty())
+		{
+			cout << "dst.empty()" << endl;
+			continue;
+		}
+		std::vector<cv::KeyPoint> keypoints2;
+		cv::Mat descriptors2;
+		detector->detectAndCompute(dst, cv::noArray(), keypoints2, descriptors2);
+
+		cout << keypoints2.size() << endl;
+		 std::vector<cv::DMatch> knn_matches;
+		 matcher->match(descriptors1, descriptors2, knn_matches);
+
+		matcher->match(descriptors1, descriptors2, knn_matches);
+		std::vector<cv::DMatch> good_matches;
+		
+		for (size_t i = 0; i < knn_matches.size(); i++)
+		{
+			cout << "dist:" << knn_matches[i].distance << endl;
+			if( knn_matches[i].distance <300)
+			{
+				good_matches.push_back(knn_matches[i]);
+			}
+		}
+		//const float ratio_thresh = 0.5f;
+		////std::vector<cv::DMatch> good_matches;
+		//for (size_t i = 0; i < knn_matches.size(); i++)
+		//{
+		//	if (knn_matches[i][0].distance < ratio_thresh * knn_matches[i][1].distance)
+		//	{
+		//		good_matches.push_back(knn_matches[i][0]);
+		//	}
+		//}
+		cout << "[match size]" << good_matches.size() << endl;
+		cv::Mat img_matches;
+		drawMatches(src, keypoints1, dst, keypoints2, good_matches, img_matches, cv::Scalar::all(-1),
+			cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+		//-- Show detected matches
+		cv::imshow("Good Matches", img_matches);
+		cv::waitKey();
+		if (good_matches.size()< knn_matches.size()/5)
 		{
 			components.erase(components.begin() + i);
 			i--;
@@ -310,11 +410,12 @@ void ofApp::setup()
 	verticalPanel.push(createFilterButton(this, "Default"));
 	verticalPanel.push(createFilterButton(this, "Only Image", onlyImages));
 	verticalPanel.push(createFilterButton(this, "Only Video", onlyVideo));
-	verticalPanel.push(createFilterButton(this, "Only First", onlyFirstComponent));
+	//verticalPanel.push(createFilterButton(this, "Only First", onlyFirstComponent));
 	verticalPanel.push(createFilterButton(this, "Only Bright", onlyBright));
 	verticalPanel.push(createFilterButton(this, "Only Dim", onlyDim));
 	verticalPanel.push(createFilterButton(this, "Only with faces", onlyFaces));
 	verticalPanel.push(createFilterButton(this, "Only Without Faces", onlyWithoutFaces));
+	verticalPanel.push(createFilterButton(this, "Find object...", onlyWithObject));
 
 	auto currentPath = fs::current_path().string() + "\\src\\videos\\";
 

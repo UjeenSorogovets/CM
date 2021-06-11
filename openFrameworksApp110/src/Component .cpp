@@ -198,7 +198,11 @@ void Component::getType()
 			this->type = UNKNOWN;
 		}
 	}
+	int m = min(image.getHeight(), image.getWidth());
+	image.crop((image.getWidth()-m)/2, (image.getHeight() - m) / 2, m, m);
 	this->image = image;
+
+
 }
 
 bool Component::fetchXml()
