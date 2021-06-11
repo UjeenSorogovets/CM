@@ -15,6 +15,7 @@ public:
 	double videoRythm = 0;
 	int faceCount = 0;
 	vector<double> edgeHistogramm;
+	vector<vector<double>> textureDesc;
 	std::filesystem::path contentPath;
 	std::filesystem::path xmlPath;
 

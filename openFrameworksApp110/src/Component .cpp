@@ -2,25 +2,45 @@
 
 using namespace std;
 
+vector< vector<double>> Component::getTexture(cv::Mat &frame)
+{
+	cv::Mat gray;
+	cv::cvtColor(frame, gray, cv::COLOR_RGB2GRAY);
+	cv::equalizeHist(gray, gray);
+	vector< vector<double>> text;//(10, vector<double>(50, double(0)));
+	for (double j = 10; j <= 30; j += 10)
+	{
+		text.push_back(vector<double>());
+		for (size_t i = 0; i <= 180; i += 45)
+		{
+			cv::Mat texture;
+			cv::Mat kernel = cv::getGaborKernel(cv::Size(20, 20),2, i, j,0.5);
+			cv::filter2D(gray, texture, CV_8U, kernel);
+			text.back().push_back(cv::mean(texture).val[0]);
+		}
+	}
+	return text;
+}
+
 vector<double> Component::getEdgeHist(cv::Mat &frame)
 {
 	cv::Mat gray;
 	cv::cvtColor(frame, gray, cv::COLOR_RGB2GRAY);
 	cv::equalizeHist(gray, gray);
 	cv::Mat edge1;
-	cv::filter2D(frame, edge1, CV_8U, cv::Matx22d(1, -1, 1, -1));
+	cv::filter2D(gray, edge1, CV_8U, cv::Matx22d(1, -1, 1, -1));
 	edge1 = cv::abs(edge1);
 	cv::Mat edge2;
-	cv::filter2D(frame, edge2, CV_8U, cv::Matx22d( 1, 1, -1, -1));
+	cv::filter2D(gray, edge2, CV_8U, cv::Matx22d( 1, 1, -1, -1));
 	edge2 = cv::abs(edge2);
 	cv::Mat edge3;
-	cv::filter2D(frame, edge3, CV_8U, cv::Matx22d(sqrt(2), 0, 0, -sqrt(2)));
+	cv::filter2D(gray, edge3, CV_8U, cv::Matx22d(sqrt(2), 0, 0, -sqrt(2)));
 	edge3 = cv::abs(edge3);
 	cv::Mat edge4;
-	cv::filter2D(frame, edge4, CV_8U, cv::Matx22d(0, -sqrt(2), sqrt(2), 0));
+	cv::filter2D(gray, edge4, CV_8U, cv::Matx22d(0, -sqrt(2), sqrt(2), 0));
 	edge4 = cv::abs(edge4);
 	cv::Mat edge5;
-	cv::filter2D(frame, edge5, CV_8U, cv::Matx22d(2, -2, -2, 2));
+	cv::filter2D(gray, edge5, CV_8U, cv::Matx22d(2, -2, -2, 2));
 	edge5 = cv::abs(edge5);
 	
 	vector<double> hist({
@@ -202,6 +222,7 @@ bool Component::fetchXml()
 		cout << "[faceCount]" << metaData.faceCount << endl;
 		metaData.edgeHistogramm = getEdgeHist(frame);
 		cout << "[edgeHistogramm]" << cv::Mat( metaData.edgeHistogramm) << endl;
+		metaData.textureDesc = getTexture(frame);
 		if (metaData.xmlRoot.load(metaData.xmlPath))
 		{
 			ofXml mainNode = metaData.xmlRoot.getChild("component");

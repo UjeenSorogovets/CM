@@ -397,6 +397,7 @@ void drawAll(MediaViewer mediaViewer)
 	mediaViewer.infoPanel.myInput4->draw();
 	mediaViewer.infoPanel.myInput5->draw();
 	mediaViewer.infoPanel.myInput6->draw();
+	mediaViewer.infoPanel.myInput7->draw();
 	//(ofxDatGuiTimeGraph)(*(mediaViewer.infoPanel.myPlotter))->draw();
 
 	mediaViewer.play->draw();

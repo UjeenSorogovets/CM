@@ -41,6 +41,11 @@ InfoPanel::InfoPanel(int x_, int y_, int width_, int height_)
 	myInput6->setWidth(width, 0);
 	myInput6->setPosition(x, y + 100);
 
+	myInput7 = new ofxDatGuiTextInput("texture descriptor", "####\n####\n####");
+	myInput7->setWidth(width,0);
+	myInput7->setPosition(x, y + 120);
+	myInput7->setHeight(60);
+
 	//myPlotter = new ofxDatGuiValuePlotter("edge histogramm", 0, 255);
 	//myPlotter->setWidth(width, 0);
 	//myPlotter->setPosition(x, y + 120);
@@ -107,7 +112,16 @@ void  MediaViewer::setInfoPanel(Component component)
 		to_string(metaData.edgeHistogramm[3]) + ", " +
 		to_string(metaData.edgeHistogramm[4]) + "]"
 	);
-
+	string textDesc = "";
+	for (size_t i = 0; i < metaData.textureDesc.size(); i++)
+	{
+		for (size_t j = 0; j < metaData.textureDesc[i].size(); j++)
+		{
+			textDesc += to_string(metaData.textureDesc[i][j]) + ", ";
+		}
+		textDesc += "\n";
+	}
+	infoPanel.myInput7->setText(textDesc);
 	/*infoPanel.myPlotter->setValue(55);
 	infoPanel.myPlotter->setValue(5);
 	infoPanel.myPlotter->setValue(105);*/

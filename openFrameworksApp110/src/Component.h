@@ -38,6 +38,7 @@ public:
 		void getType();
 		int countFaces(cv::Mat &frame);
 		vector<double> getEdgeHist(cv::Mat &frame);
+		vector< vector<double>> getTexture(cv::Mat &frame);
 };
 
 vector<Component> withoutFilter(vector<Component>& components);
