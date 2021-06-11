@@ -257,14 +257,13 @@ bool Component::fetchXml()
 
 		cout << "[texture]" << endl;
 		ofXml texNode = mainNode.getChild("texture");
-		size_t I = 0;
-		size_t J = 0;
 		for (double j = 10; j <= 30; j += 10)
 		{
 			metaData.textureDesc.push_back(vector<double>());
 			for (size_t i = 0; i <= 180; i += 45)
 			{
-				metaData.textureDesc.back().push_back(texNode.getChild("l" + to_string((int)j) + "_t" + to_string((int)i)));
+				cout << "l" + to_string((int)j) + "_t" + to_string((int)i) <<endl;
+				metaData.textureDesc.back().push_back(texNode.getChild("l" + to_string((int)j) + "_t" + to_string((int)i)).getDoubleValue());
 			}
 		}
 		/*ofXml colorNode = mainNode.appendChild("color");
@@ -363,12 +362,16 @@ bool Component::fetchXml()
 		ofXml texNode = mainNode.appendChild("texture");
 		size_t I = 0;
 		size_t J = 0;
-		for (double j = 10; j <= 30; j += 10)
+		for (double i = 10; i <= 30; i += 10)
 		{
-			for (size_t i = 0; i <= 180; i += 45)
+			I = 0;
+			for (size_t j = 0; j <= 180; j += 45)
 			{
-				texNode.appendChild("l" + to_string((int)j) + "_t" + to_string((int)i)).set((double)metaData.textureDesc[I][J]);
+				cout <<I <<" "<<J << endl;
+				texNode.appendChild("l" + to_string((int)i) + "_t" + to_string((int)j)).set((double)metaData.textureDesc[J][I]);
+				I++;
 			}
+			J++;
 		}
 
 
