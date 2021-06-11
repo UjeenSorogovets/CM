@@ -10,6 +10,12 @@ public:
 	ofXml xmlRoot;
 	ofVec2f size;
 	ComponentType type;
+	ofFloatColor meanColor;
+	double meanLuminacance;
+	double videoRythm = 0;
+	int faceCount = 0;
+	vector<double> edgeHistogramm;
+	vector<vector<double>> textureDesc;
 	std::filesystem::path contentPath;
 	std::filesystem::path xmlPath;
 

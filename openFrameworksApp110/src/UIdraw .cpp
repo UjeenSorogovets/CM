@@ -29,7 +29,7 @@ void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaType)
 	if (width > height)
 	{
 		//cout << "width>height" << endl;
-		mediaViewer->height = maxHeight / (width / height);
+		mediaViewer->height = height * maxWidth / width; //maxHeight / (width / height);
 		mediaViewer->width = maxWidth;
 
 		mediaViewer->y = mediaViewer->startY + (maxHeight - mediaViewer->height) / 2;
@@ -39,7 +39,7 @@ void resizePlayerToMedia(MediaViewer* mediaViewer, ComponentType mediaType)
 	{
 		//cout << "width<height" << endl;
 		mediaViewer->height = maxHeight;
-		mediaViewer->width = maxWidth * (width / height);
+		mediaViewer->width = maxHeight * (width / height);
 
 		mediaViewer->y = mediaViewer->startY;
 		mediaViewer->x = mediaViewer->startX + (maxWidth - mediaViewer->width) / 2;
@@ -98,80 +98,24 @@ Component createMediaButton(ofApp* ofApp, string defaultPath)
 	//component.component->onButtonEvent(ofApp, &ofApp::onButtonEvent);
 
 	ofImage image;
-
 	if (defaultPath != "")
 	{
-		string path = defaultPath;
-		ofVideoPlayer player;
-
-		//cout << "play load:" << player.load(path) << endl;
-		if (image.load(path))
-		{
-			cout << "added image" << endl;
-			component.type = IMAGE;
-		}
-		else
-		{
-			if (player.load(path)) {
-				cout << "added video" << endl;
-				component.type = VIDEO;
-				player.play();
-				player.setPaused(true);
-				auto x = player.getPixels();
-				image.setFromPixels(x);
-			}
-			else
-			{
-				cout << "error open file" << endl;
-				component.type = UNKNOWN;
-			}
-		}
-		component.image = image;
-		component.path = path;
-
-		image.clear();
-		player.close();
-
-		if (!component.fetchXml())
-		{
-			cout << "xml load error [" << component.metaData.xmlPath << "]" << endl;
-		}
+		component.path = defaultPath;
 	}
 	else
 	{
 		ofFileDialogResult result = ofSystemLoadDialog("Load file");
 		if (result.bSuccess)
 		{
-			string path = result.getPath();
-			ofVideoPlayer player;
-
-			if (image.load(path))
-			{
-				cout << "added image" << endl;
-				component.type = IMAGE;
-			}
-			else
-			{
-				if (player.load(path)) {
-					cout << "added video" << endl;
-					component.type = VIDEO;
-					player.play();
-					player.setPaused(true);
-					auto x = player.getPixels();
-					image.setFromPixels(x);
-				}
-				else
-				{
-					cout << "error open file" << endl;
-					component.type = UNKNOWN;
-				}
-			}
-			component.image = image;
-			component.path = path;
-			if (!component.fetchXml())
-			{
-				cout << "xml load error [" << component.metaData.xmlPath << "]" << endl;
-			}
+			component.path = result.getPath();
+		}
+	}
+	if (component.path !="")
+	{
+		
+		if (!component.fetchXml())
+		{
+			cout << "xml load error [" << component.metaData.xmlPath << "]" << endl;
 		}
 	}
 	return component;
@@ -186,8 +130,7 @@ void runInCurrentPlayer(MediaViewer* mediaViewer, int res)
 			mediaViewer->videoPlayer.stop();
 
 			mediaViewer->isImageNow = true;
-			auto img = horizontalPanel.components[res].image;
-			mediaViewer->imagePlayer = img;
+			mediaViewer->imagePlayer.load(horizontalPanel.components[res].path);
 
 			resizePlayerToMedia(mediaViewer, mediaType);
 		}
