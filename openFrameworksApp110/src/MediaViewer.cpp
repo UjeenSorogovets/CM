@@ -99,7 +99,8 @@ void  MediaViewer::setInfoPanel(Component component)
 	infoPanel.myInput3->setText(to_string(metaData.meanLuminacance));
 	infoPanel.myInput4->setText(to_string(metaData.faceCount));
 	infoPanel.myInput5->setText(to_string(metaData.videoRythm));
-	infoPanel.myInput6->setText("[" +
+	infoPanel.myInput6->setText(
+		to_string(metaData.edgeHistogramm[5])+ " * [" +
 		to_string(metaData.edgeHistogramm[0]) + ", " +
 		to_string(metaData.edgeHistogramm[1]) + ", " +
 		to_string(metaData.edgeHistogramm[2]) + ", " +

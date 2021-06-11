@@ -9,21 +9,41 @@ vector<double> Component::getEdgeHist(cv::Mat &frame)
 	cv::equalizeHist(gray, gray);
 	cv::Mat edge1;
 	cv::filter2D(frame, edge1, CV_8U, cv::Matx22d(1, -1, 1, -1));
+	edge1 = cv::abs(edge1);
 	cv::Mat edge2;
 	cv::filter2D(frame, edge2, CV_8U, cv::Matx22d( 1, 1, -1, -1));
+	edge2 = cv::abs(edge2);
 	cv::Mat edge3;
 	cv::filter2D(frame, edge3, CV_8U, cv::Matx22d(sqrt(2), 0, 0, -sqrt(2)));
+	edge3 = cv::abs(edge3);
 	cv::Mat edge4;
 	cv::filter2D(frame, edge4, CV_8U, cv::Matx22d(0, -sqrt(2), sqrt(2), 0));
+	edge4 = cv::abs(edge4);
 	cv::Mat edge5;
 	cv::filter2D(frame, edge5, CV_8U, cv::Matx22d(2, -2, -2, 2));
-	return vector<double>({ 
+	edge5 = cv::abs(edge5);
+	
+	vector<double> hist({
 		cv::mean(edge1).val[0],
 		cv::mean(edge2).val[0],
 		cv::mean(edge3).val[0],
 		cv::mean(edge4).val[0],
 		cv::mean(edge5).val[0],
 		});
+	double max = 0;
+	for (size_t i = 0; i < 5; i++)
+	{
+		if (max < hist[i])
+		{
+			max = hist[i];
+		}
+	}
+	for (size_t i = 0; i < 5; i++)
+	{
+		hist[i] /= max;
+	}
+	hist.push_back(max);
+	return hist;
 }
 
 int Component::countFaces(cv::Mat &frame)
